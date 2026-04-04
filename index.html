@@ -13,6 +13,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link rel="stylesheet" href="style.css">
+<style>
+  .nav-btn.active .nav-img {
+    filter: brightness(1) !important;
+  }
+</style>
 </head>
 <body>
 <div id="app">
@@ -1012,10 +1017,7 @@ function showBill(txn) {
   document.getElementById('receiptContent').innerHTML = `
     <div class="receipt">
       <div class="receipt-header">
-        <div class="receipt-title" style="display:flex;align-items:center;justify-content:center;gap:8px;">
-          <img src="logo.png" alt="Logo" style="width:32px;height:32px;object-fit:contain;border-radius:6px;">
-          ${bizName}
-        </div>
+        <div class="receipt-title">💱 ${bizName}</div>
         <div class="receipt-sub">${fromC.flag} ${fromCode} → ${toC.flag} ${toCode}${bizCity ? ' | ' + bizCity : ''}</div>
         <div style="margin-top:8px"><span class="receipt-no">Receipt #${no}</span></div>
       </div>
