@@ -23,6 +23,22 @@
   /* More padding since no labels */
   .nav-btn { padding: 14px 4px; }
 
+  /* Inline icon helper for buttons/labels */
+  .btn-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    vertical-align: middle;
+    margin-right: 5px;
+    display: inline-block;
+  }
+  .card-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    vertical-align: middle;
+  }
+
   /* Normal icon - dimmed */
   .nav-img {
     width: 24px;
@@ -68,7 +84,7 @@
     <!-- PAGE: CALCULATOR -->
     <div class="page active" id="page-calc">
       <div class="card">
-        <div class="card-title"><span>🌍</span> Currency Pair</div>
+        <div class="card-title"><img src="icons/icon-earth.png" class="card-icon"> Currency Pair</div>
         <div class="currency-pair-wrap">
           <div>
             <div class="input-label">From (You Receive)</div>
@@ -117,7 +133,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title"><span>💰</span> Customer Transaction</div>
+        <div class="card-title"><img src="icons/icon-moneybag.png" class="card-icon"> Customer Transaction</div>
         <div class="input-group">
           <label class="input-label">Customer Name</label>
           <input type="text" id="custName" placeholder="Full name">
@@ -141,24 +157,24 @@
       </div>
 
       <div class="result-box" id="resultBox">
-        <div class="result-label" id="resultLabel">💚 Amount to Send</div>
+        <div class="result-label" id="resultLabel"><img src="icons/icon-money.png" class="btn-icon"> Amount to Send</div>
         <div class="result-amount" id="toResult">—</div>
         <div class="result-unit" id="resultUnit">—</div>
       </div>
 
       <div class="profit-box">
         <div>
-          <div class="profit-label">🟠 Profit</div>
+          <div class="profit-label"><img src="icons/icon-money.png" class="btn-icon"> Profit</div>
           <div style="font-size:10px;color:var(--grey);margin-top:2px">Service charge earned</div>
         </div>
         <div class="profit-val" id="profitResult">—</div>
       </div>
 
       <button class="btn btn-green" onclick="saveTransaction()" style="margin-bottom:10px">
-        ✅ Save & Add to History
+        <img src="icons/icon-save.png" class="btn-icon"> Save & Add to History
       </button>
       <button class="btn btn-outline" onclick="showBill()">
-        🧾 Preview Bill / Receipt
+        <img src="icons/icon-receipt.png" class="btn-icon"> Preview Bill / Receipt
       </button>
     </div>
 
@@ -192,7 +208,7 @@
 
       <div class="section-title">
         <span>Transactions</span>
-        <button class="btn btn-danger btn-sm" onclick="confirmClear()" style="display:none" id="clearBtn">Clear All</button>
+        <button class="btn btn-danger btn-sm" onclick="confirmClear()" style="display:none" id="clearBtn"><img src="icons/icon-delete.png" class="btn-icon"> Clear All</button>
       </div>
       <div id="historyList"></div>
     </div>
@@ -280,12 +296,12 @@
           <div class="setting-val" id="set-net">—</div>
         </div>
         <button class="btn btn-primary" style="margin-top:12px" onclick="showRateModal()">
-          ✏️ Update Rate
+          <img src="icons/icon-refresh.png" class="btn-icon"> Update Rate
         </button>
       </div>
 
       <div class="card">
-        <div class="card-title"><span>🏢</span> Business Info</div>
+        <div class="card-title"><img src="icons/icon-businessinfo.png" class="card-icon"> Business Info</div>
         <div class="input-group">
           <label class="input-label">Business Name</label>
           <input type="text" id="bizName" placeholder="MushiEx" oninput="saveBizInfo()">
@@ -314,7 +330,7 @@
       <div class="card">
         <div class="card-title"><span>💾</span> Data</div>
         <p style="font-size:12px;color:var(--grey);margin-bottom:12px">All data is saved on your phone. No internet needed.</p>
-        <button class="btn btn-danger" onclick="confirmClear()">🗑️ Clear All Transactions</button>
+        <button class="btn btn-danger" onclick="confirmClear()"><img src="icons/icon-delete.png" class="btn-icon"> Clear All Transactions</button>
       </div>
     </div>
 
@@ -389,7 +405,7 @@
       <input type="number" id="modal-charge" placeholder="e.g. 0.50" step="0.01">
     </div>
     <button class="btn btn-primary" onclick="applyRate()" style="margin-top:4px">
-      ✅ Apply Rate
+      <img src="icons/icon-save.png" class="btn-icon"> Apply Rate
     </button>
   </div>
 </div>
@@ -398,14 +414,14 @@
 <div class="modal-overlay" id="billModal" onclick="closeBillModal(event)">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title">🧾 Customer Receipt</div>
+    <div class="modal-title"><img src="icons/icon-receipt.png" class="btn-icon"> Customer Receipt</div>
     <div id="receiptContent"></div>
     <div style="display:flex;gap:8px;margin-top:8px">
       <button class="btn btn-primary" onclick="downloadReceiptJPG()" style="flex:1">
-        🖼️ Save JPG
+        <img src="icons/icon-receipt.png" class="btn-icon"> Save JPG
       </button>
       <button class="btn btn-green" onclick="downloadReceiptPDF()" style="flex:1">
-        📄 Save PDF
+        <img src="icons/icon-receipt.png" class="btn-icon"> Save PDF
       </button>
     </div>
     <button class="btn btn-outline" onclick="closeBillModal()" style="margin-top:8px">
@@ -421,7 +437,7 @@
     <div class="modal-title">📋 Transaction Detail</div>
     <div id="txnDetail"></div>
     <button class="btn btn-danger" id="deleteTxnBtn" style="margin-top:8px">
-      🗑️ Delete This Transaction
+      <img src="icons/icon-delete.png" class="btn-icon"> Delete This Transaction
     </button>
     <button class="btn btn-outline" onclick="closeTxnModal()" style="margin-top:8px">
       Close
@@ -767,7 +783,7 @@ function updateDynamicLabels() {
   document.getElementById('receiverLabel').textContent = `Receiver Name (${to.name.split(' ')[0]})`;
 
   // Result label / unit
-  document.getElementById('resultLabel').textContent  = `💚 ${to.code} Amount to Send`;
+  document.getElementById('resultLabel').innerHTML  = `<img src="icons/icon-money.png" class="btn-icon"> ${to.code} Amount to Send`;
   document.getElementById('resultUnit').textContent   = to.name;
 
   // History stat labels
@@ -1050,7 +1066,7 @@ function showBill(txn) {
       <div class="receipt-row"><span class="receipt-key">Exchange Rate</span><span class="receipt-val">1 ${fromCode} = ${t.rate.toFixed(4)} ${toCode}</span></div>
       <hr class="receipt-divider">
       <div class="receipt-total">
-        <span class="receipt-total-key">✅ ${toCode} to Receive</span>
+        <span class="receipt-total-key"><img src="icons/icon-money.png" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;object-fit:contain;"> ${toCode} to Receive</span>
         <span class="receipt-total-val">${fmt(toAmt)} ${toCode}</span>
       </div>
       <div class="receipt-footer">
@@ -1170,7 +1186,7 @@ function showTxnDetail(id) {
       <div class="setting-row"><div class="setting-label">Profit</div><div class="setting-val" style="color:var(--orange)">${fmt(txn.profit)} ${fc}</div></div>
     </div>
     <button class="btn btn-outline" onclick="showBillFromHistory(${id})" style="margin-bottom:0">
-      🧾 View Receipt
+      <img src="icons/icon-receipt.png" class="btn-icon"> View Receipt
     </button>
   `;
 
