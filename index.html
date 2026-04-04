@@ -111,17 +111,23 @@
 
       <div class="card">
         <div class="card-title"><img src="icons/icon-moneybag.png" class="card-icon"> Customer Transaction</div>
-        <div class="input-group">
-          <label class="input-label">Customer Name</label>
-          <input type="text" id="custName" placeholder="Full name">
+        <div id="field-name">
+          <div class="input-group">
+            <label class="input-label">Customer Name</label>
+            <input type="text" id="custName" placeholder="Full name">
+          </div>
         </div>
-        <div class="input-group">
-          <label class="input-label">Phone / WhatsApp</label>
-          <input type="tel" id="custPhone" placeholder="+1...">
+        <div id="field-phone">
+          <div class="input-group">
+            <label class="input-label">Phone / WhatsApp</label>
+            <input type="tel" id="custPhone" placeholder="+1...">
+          </div>
         </div>
-        <div class="input-group">
-          <label class="input-label" id="receiverLabel">Receiver Name</label>
-          <input type="text" id="receiverName" placeholder="Who receives in destination country">
+        <div id="field-receiver">
+          <div class="input-group">
+            <label class="input-label" id="receiverLabel">Receiver Name</label>
+            <input type="text" id="receiverName" placeholder="Who receives in destination country">
+          </div>
         </div>
         <div class="input-group">
           <label class="input-label" id="amountLabel">Amount Received</label>
@@ -139,12 +145,17 @@
         <div class="result-unit" id="resultUnit"></div>
       </div>
 
-      <div class="profit-box">
-        <div>
-          <div class="profit-label"><img src="icons/icon-money.png" style="width:22px;height:22px;object-fit:contain;"> Profit</div>
-          <div style="font-size:10px;color:var(--grey);margin-top:2px">Service charge earned</div>
+      <div id="field-profit-box">
+        <div class="profit-box">
+          <div>
+            <div class="profit-label"><img src="icons/icon-money.png" style="width:22px;height:22px;object-fit:contain;"> Profit</div>
+            <div style="font-size:10px;color:var(--grey);margin-top:2px">Service charge earned</div>
+          </div>
+          <div>
+            <div class="profit-val" id="profitResult">0.00</div>
+            <div id="profitCurrLabel" style="font-size:10px;color:var(--orange);text-align:right;margin-top:2px"></div>
+          </div>
         </div>
-        <div class="profit-val" id="profitResult">0.00</div>
       </div>
 
       <button class="btn btn-green" onclick="saveTransaction()" style="margin-bottom:10px">
@@ -293,6 +304,73 @@
         </div>
       </div>
 
+      <!-- CUSTOMIZATION CARD -->
+      <div class="card">
+        <div class="card-title"><span style="font-size:18px;vertical-align:middle;margin-right:6px">🎛️</span> Customise Fields</div>
+        <p style="font-size:12px;color:var(--text-sub);margin-bottom:14px;line-height:1.5">Toggle which fields appear on the calculator screen.</p>
+
+        <div class="toggle-row" id="tog-phone-row">
+          <div>
+            <div class="toggle-label">Phone / WhatsApp</div>
+            <div class="toggle-sub">Customer contact number</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="tog-phone" onchange="saveCustomisation()" checked>
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Receiver Name</div>
+            <div class="toggle-sub">Who receives in destination country</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="tog-receiver" onchange="saveCustomisation()" checked>
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Customer Name</div>
+            <div class="toggle-sub">Sender's full name</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="tog-name" onchange="saveCustomisation()" checked>
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+
+        <div class="toggle-row" style="border-bottom:none">
+          <div>
+            <div class="toggle-label">Profit Box</div>
+            <div class="toggle-sub">Show profit on calculator screen</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="tog-profit" onchange="saveCustomisation()" checked>
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- PROFIT CURRENCY CARD -->
+      <div class="card">
+        <div class="card-title"><span style="font-size:18px;vertical-align:middle;margin-right:6px">💱</span> Profit Display Currency</div>
+        <p style="font-size:12px;color:var(--text-sub);margin-bottom:14px;line-height:1.5">Choose which currency your profit is shown in on the home screen.</p>
+        <div class="profit-curr-options" id="profitCurrOptions">
+          <!-- rendered by JS -->
+        </div>
+        <div style="margin-top:12px">
+          <div class="input-label" style="margin-bottom:6px">Or pick any currency</div>
+          <button class="btn btn-outline" style="gap:10px" onclick="openProfitCurrPicker()">
+            <span id="profitCurrFlag" style="font-size:20px">💱</span>
+            <span id="profitCurrCode" style="font-weight:700;font-size:15px;color:var(--gold-light)">Same as From</span>
+            <span style="margin-left:auto;color:var(--text-sub)">▾</span>
+          </button>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">📲</span> Install as App</div>
         <p style="font-size:13px;color:var(--grey);line-height:1.6;margin-bottom:12px">
@@ -423,6 +501,20 @@
     <button class="btn btn-outline" onclick="closeTxnModal()" style="margin-top:8px">
       Close
     </button>
+  </div>
+</div>
+
+<!-- PROFIT CURRENCY PICKER MODAL -->
+<div class="modal-overlay" id="profitCurrModal" onclick="closeProfitCurrPicker(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">💱 Profit Display Currency</div>
+    <div class="currency-search-wrap">
+      <span class="currency-search-icon"><img src="icons/icon-search.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;"></span>
+      <input type="text" id="profitCurrSearchInput" placeholder="Search currency…"
+        oninput="filterProfitCurrList(this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
+    <div class="currency-list" id="profitCurrencyList"></div>
   </div>
 </div>
 
@@ -622,6 +714,8 @@ const DB = {
   saveSettings: (s) => { try { localStorage.setItem('settings', JSON.stringify(s)); } catch(e) {} },
   getBiz: () => { try { return JSON.parse(localStorage.getItem('biz') || '{"name":"MushiEx","phone":"","city":""}'); } catch(e) { return {"name":"MushiEx","phone":"","city":""}; } },
   saveBiz: (b) => { try { localStorage.setItem('biz', JSON.stringify(b)); } catch(e) {} },
+  getCustom: () => { try { return JSON.parse(localStorage.getItem('custom') || '{"showPhone":true,"showReceiver":true,"showName":true,"showProfit":true,"profitCurrency":"from"}'); } catch(e) { return {"showPhone":true,"showReceiver":true,"showName":true,"showProfit":true,"profitCurrency":"from"}; } },
+  saveCustom: (c) => { try { localStorage.setItem('custom', JSON.stringify(c)); } catch(e) {} },
 };
 
 // ════════════════════════════════════════════════════════════
@@ -630,6 +724,166 @@ const DB = {
 let currentFilter = 'today';
 let currentSummaryPeriod = 'month';
 let selectedTxnId = null;
+
+// ════════════════════════════════════════════════════════════
+// CUSTOMISATION — Field Toggles & Profit Currency
+// ════════════════════════════════════════════════════════════
+
+function applyCustomisation() {
+  const c = DB.getCustom();
+
+  // Sync checkboxes
+  document.getElementById('tog-phone').checked    = c.showPhone    !== false;
+  document.getElementById('tog-receiver').checked = c.showReceiver !== false;
+  document.getElementById('tog-name').checked     = c.showName     !== false;
+  document.getElementById('tog-profit').checked   = c.showProfit   !== false;
+
+  // Show/hide fields
+  document.getElementById('field-phone').style.display    = c.showPhone    !== false ? '' : 'none';
+  document.getElementById('field-receiver').style.display = c.showReceiver !== false ? '' : 'none';
+  document.getElementById('field-name').style.display     = c.showName     !== false ? '' : 'none';
+  document.getElementById('field-profit-box').style.display = c.showProfit !== false ? '' : 'none';
+
+  // Render profit currency picker buttons
+  renderProfitCurrOptions();
+  updateProfitCurrButton();
+}
+
+function saveCustomisation() {
+  const c = {
+    showPhone:    document.getElementById('tog-phone').checked,
+    showReceiver: document.getElementById('tog-receiver').checked,
+    showName:     document.getElementById('tog-name').checked,
+    showProfit:   document.getElementById('tog-profit').checked,
+    profitCurrency: DB.getCustom().profitCurrency || 'from',
+  };
+  DB.saveCustom(c);
+  applyCustomisation();
+  calcUpdate();
+  showToast('✅ Settings saved!');
+}
+
+function renderProfitCurrOptions() {
+  const c   = DB.getCustom();
+  const s   = DB.getSettings();
+  const sel = c.profitCurrency || 'from';
+  const from = getCurr(s.fromCurrency || 'MYR');
+  const to   = getCurr(s.toCurrency   || 'PKR');
+
+  // Quick options: From currency, To currency, auto
+  const opts = [
+    { val: 'from', label: `${from.flag} ${from.code}`, sub: 'From currency (default)' },
+    { val: 'to',   label: `${to.flag} ${to.code}`,   sub: 'To currency' },
+  ];
+
+  document.getElementById('profitCurrOptions').innerHTML = opts.map(o => `
+    <div class="profit-curr-opt ${sel === o.val ? 'selected' : ''}" onclick="setProfitCurrency('${o.val}')">
+      <div>
+        <div style="font-size:15px;font-weight:700;color:var(--white)">${o.label}</div>
+        <div style="font-size:11px;color:var(--text-sub);margin-top:2px">${o.sub}</div>
+      </div>
+      <div class="profit-curr-check">${sel === o.val ? '✓' : ''}</div>
+    </div>
+  `).join('');
+}
+
+function setProfitCurrency(code) {
+  const c = DB.getCustom();
+  c.profitCurrency = code;
+  DB.saveCustom(c);
+  renderProfitCurrOptions();
+  updateProfitCurrButton();
+  calcUpdate();
+  showToast('💱 Profit currency updated!');
+}
+
+function updateProfitCurrButton() {
+  const c   = DB.getCustom();
+  const s   = DB.getSettings();
+  const sel = c.profitCurrency || 'from';
+
+  let curr;
+  if      (sel === 'from') curr = getCurr(s.fromCurrency || 'MYR');
+  else if (sel === 'to')   curr = getCurr(s.toCurrency   || 'PKR');
+  else                     curr = getCurr(sel);
+
+  const isQuick = (sel === 'from' || sel === 'to');
+  document.getElementById('profitCurrFlag').textContent = curr.flag;
+  document.getElementById('profitCurrCode').textContent = isQuick
+    ? (sel === 'from' ? 'Same as From' : 'Same as To')
+    : `${curr.code} – ${curr.name}`;
+}
+
+// Profit currency custom picker
+function openProfitCurrPicker() {
+  document.getElementById('profitCurrSearchInput').value = '';
+  renderProfitCurrList('');
+  document.getElementById('profitCurrModal').classList.add('open');
+  setTimeout(() => document.getElementById('profitCurrSearchInput').focus(), 320);
+}
+
+function closeProfitCurrPicker(e) {
+  if (!e || e.target === document.getElementById('profitCurrModal'))
+    document.getElementById('profitCurrModal').classList.remove('open');
+}
+
+function filterProfitCurrList(q) {
+  renderProfitCurrList(q);
+}
+
+function renderProfitCurrList(q) {
+  q = (q || '').trim().toLowerCase();
+  const matches = q
+    ? CURRENCIES.filter(c => c.code.toLowerCase().includes(q) || c.name.toLowerCase().includes(q))
+    : CURRENCIES;
+  const c   = DB.getCustom();
+  const sel = c.profitCurrency || 'from';
+  const el  = document.getElementById('profitCurrencyList');
+  if (!matches.length) {
+    el.innerHTML = '<div class="currency-opt" style="color:var(--grey);cursor:default;justify-content:center">No results found</div>';
+    return;
+  }
+  el.innerHTML = matches.map(cur => `
+    <div class="currency-opt${cur.code === sel ? ' selected' : ''}" onclick="selectProfitCurr('${cur.code}')">
+      <span class="currency-opt-flag">${cur.flag}</span>
+      <span class="currency-opt-code">${cur.code}</span>
+      <span class="currency-opt-name">${cur.name}</span>
+    </div>
+  `).join('');
+  const selEl = el.querySelector('.selected');
+  if (selEl) setTimeout(() => selEl.scrollIntoView({ block: 'nearest' }), 50);
+}
+
+function selectProfitCurr(code) {
+  const c = DB.getCustom();
+  c.profitCurrency = code;
+  DB.saveCustom(c);
+  document.getElementById('profitCurrModal').classList.remove('open');
+  renderProfitCurrOptions();
+  updateProfitCurrButton();
+  calcUpdate();
+  showToast(`💱 Profit shown in ${code}`);
+}
+
+// ── Helper: get profit converted to chosen display currency ──
+function getProfitDisplay(profitInFrom, fromCode) {
+  const c   = DB.getCustom();
+  const s   = DB.getSettings();
+  const sel = c.profitCurrency || 'from';
+
+  if (sel === 'from' || sel === fromCode) {
+    return { amount: profitInFrom, code: fromCode };
+  }
+  if (sel === 'to') {
+    // profit (in fromCurrency) × net rate = toAmount profit
+    const net = (s.rate || 0) - (s.charge || 0);
+    return { amount: profitInFrom * net, code: s.toCurrency || 'PKR' };
+  }
+  // Custom currency — we can't do live conversion without API,
+  // so show a note to the user
+  const curr = getCurr(sel);
+  return { amount: profitInFrom, code: fromCode, note: `≈ in ${curr.flag} ${curr.code} (set rate manually)` };
+}
 
 // ════════════════════════════════════════════════════════════
 // CURRENCY PICKER MODAL
@@ -726,6 +980,7 @@ function init() {
   document.getElementById('bizCity').value  = biz.city  || '';
 
   updateDynamicLabels();
+  applyCustomisation();
   calcUpdate();
   renderHistory();
   renderSummary();
@@ -740,6 +995,8 @@ function onCurrencyChange() {
   // fromCurrency / toCurrency already saved by selectCurr or swapCurrencies
   updateCurrPickerButtons();
   updateDynamicLabels();
+  renderProfitCurrOptions();
+  updateProfitCurrButton();
   calcUpdate();
   renderHistory();
   renderSummary();
@@ -826,7 +1083,7 @@ function goToPageIndex(idx) {
   const id = PAGE_ORDER[idx];
   if (id === 'history') { renderHistory(); document.getElementById('clearBtn').style.display = DB.getTxns().length ? '' : 'none'; }
   if (id === 'summary') renderSummary();
-  if (id === 'settings') updateSettingsDisplay();
+  if (id === 'settings') { updateSettingsDisplay(); renderProfitCurrOptions(); updateProfitCurrButton(); }
 }
 
 // ── SWIPE / DRAG GESTURE ──
@@ -942,7 +1199,16 @@ function calcUpdate() {
   document.getElementById('netRateDisplay').textContent = net > 0 ? net.toFixed(2) + ' ' + to.code : '0.00 ' + to.code;
   document.getElementById('header-rate').textContent    = net > 0 ? `${net.toFixed(2)} ${to.code}/${from.code}` : 'Set Rate ▸';
   document.getElementById('toResult').textContent       = amount > 0 && net > 0 ? fmt(toAmt) : '0.00';
-  document.getElementById('profitResult').textContent   = amount > 0 && charge > 0 ? fmt(profit) + ' ' + from.code : '0.00';
+
+  // Profit with chosen display currency
+  const pd = getProfitDisplay(profit, from.code);
+  if (amount > 0 && charge > 0) {
+    document.getElementById('profitResult').textContent = fmt(pd.amount) + ' ' + pd.code;
+    document.getElementById('profitCurrLabel').textContent = pd.note || '';
+  } else {
+    document.getElementById('profitResult').textContent = '0.00';
+    document.getElementById('profitCurrLabel').textContent = '';
+  }
 
   if (rate > 0) {
     DB.saveSettings({ ...s, rate, charge });
