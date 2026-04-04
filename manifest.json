@@ -1,0 +1,27 @@
+{
+  "name": "MushiEx – Global Exchange",
+  "short_name": "MushiEx",
+  "description": "Professional currency exchange calculator for money changers. Track transactions, generate receipts, and view profit summaries.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a1628",
+  "theme_color": "#0a1628",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "business", "utilities"]
+}

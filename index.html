@@ -7,57 +7,29 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0a1628">
+<meta name="description" content="MushiEx – Professional currency exchange calculator for money changers. Track transactions, generate receipts, and view profit summaries.">
+<link rel="manifest" href="manifest.json">
 <title>MushiEx – Global</title>
 <link rel="icon" type="image/png" href="logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link rel="stylesheet" href="style.css">
 <style>
-  /* Remove top slider bar */
-  .nav-btn.active::before { display: none; }
-
-  /* Global Poppins font override */
-  *, *::before, *::after {
-    font-family: 'Poppins', sans-serif !important;
-  }
-
-  /* Hide tab labels */
-  .nav-label { display: none; }
-
-  /* More padding since no labels */
-  .nav-btn { padding: 14px 4px; }
-
-  /* Inline icon helper for buttons/labels */
+  /* ── ICON SIZES ── */
   .btn-icon {
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
     object-fit: contain;
     vertical-align: middle;
-    margin-right: 5px;
-    display: inline-block;
+    flex-shrink: 0;
   }
   .card-icon {
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
     object-fit: contain;
     vertical-align: middle;
-  }
-
-  /* Normal icon - dimmed */
-  .nav-img {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-    transition: width 0.25s ease, height 0.25s ease, filter 0.25s ease;
-    filter: brightness(0.45);
-  }
-
-  /* Active tab - bigger, no glow */
-  .nav-btn.active .nav-img {
-    width: 36px;
-    height: 36px;
-    filter: brightness(1);
+    flex-shrink: 0;
   }
 </style>
 </head>
@@ -77,7 +49,7 @@
         </div>
       </div>
       <div class="rate-pill" onclick="showRateModal()">
-        <span id="header-rate">-- Rate</span>
+        <span id="header-rate">Set Rate ▸</span>
       </div>
     </div>
   </div>
@@ -99,7 +71,7 @@
               <span class="curr-picker-arrow">▾</span>
             </button>
           </div>
-          <button class="swap-btn" onclick="swapCurrencies()" title="Swap currencies"><img src="icons/icon-swap.png" style="width:22px;height:22px;object-fit:contain;vertical-align:middle;"></button>
+          <button class="swap-btn" onclick="swapCurrencies()" title="Swap currencies"><img src="icons/icon-swap.png" style="width:26px;height:26px;object-fit:contain;vertical-align:middle;"></button>
           <div>
             <div class="input-label">To (You Send)</div>
             <button class="curr-picker-btn" id="toCurrBtn" onclick="openCurrPicker('to')">
@@ -112,7 +84,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title"><img src="icons/icon-ratesettings.png" class="card-icon"> Rate Settings</div>
+        <div class="card-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">⚙️</span> Rate Settings</div>
         <div class="input-group">
           <label class="input-label" id="rateLabel">Market Rate (1 ? = ? ?)</label>
           <div class="input-wrap">
@@ -169,7 +141,7 @@
 
       <div class="profit-box">
         <div>
-          <div class="profit-label"><img src="icons/icon-money.png" class="btn-icon"> Profit</div>
+          <div class="profit-label"><img src="icons/icon-money.png" style="width:22px;height:22px;object-fit:contain;"> Profit</div>
           <div style="font-size:10px;color:var(--grey);margin-top:2px">Service charge earned</div>
         </div>
         <div class="profit-val" id="profitResult">0.00</div>
@@ -221,7 +193,7 @@
     <!-- PAGE: SUMMARY -->
     <div class="page" id="page-summary">
       <div class="card">
-        <div class="card-title"><img src="icons/icon-report.png" class="card-icon"> Monthly Report</div>
+        <div class="card-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">📅</span> Monthly Report</div>
         <div class="filter-row">
           <button class="filter-chip active" onclick="setSummaryPeriod('month',this)">This Month</button>
           <button class="filter-chip" onclick="setSummaryPeriod('last',this)">Last Month</button>
@@ -249,7 +221,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title"><img src="icons/icon-averages.png" class="card-icon"> Averages</div>
+        <div class="card-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">📊</span> Averages</div>
         <div class="setting-row">
           <div><div class="setting-label">Avg Profit per Customer</div></div>
           <div class="setting-val" id="sum-avg-profit">—</div>
@@ -271,7 +243,7 @@
     <!-- PAGE: SETTINGS -->
     <div class="page" id="page-settings">
       <div class="card">
-        <div class="card-title"><img src="icons/icon-exchangesettings.png" class="card-icon"> Exchange Settings</div>
+        <div class="card-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">⚙️</span> Exchange Settings</div>
         <div class="setting-row">
           <div>
             <div class="setting-label">Currency Pair</div>
@@ -322,7 +294,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title"><img src="icons/icon-install.png" class="card-icon"> Install as App</div>
+        <div class="card-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">📲</span> Install as App</div>
         <p style="font-size:13px;color:var(--grey);line-height:1.6;margin-bottom:12px">
           To install on Android phone:<br>
           1. Open this file in <strong style="color:var(--white)">Chrome</strong><br>
@@ -333,7 +305,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title"><img src="icons/icon-datacard.png" class="card-icon"> Data</div>
+        <div class="card-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">💾</span> Data</div>
         <p style="font-size:12px;color:var(--grey);margin-bottom:12px">All data is saved on your phone. No internet needed.</p>
         <button class="btn btn-danger" onclick="confirmClear()"><img src="icons/icon-delete.png" class="btn-icon"> Clear All Transactions</button>
       </div>
@@ -345,25 +317,29 @@
 
   <!-- BOTTOM NAV -->
   <nav class="nav">
-    <button class="nav-btn active" onclick="showPage('calc',this)">
+    <button class="nav-btn active" onclick="showPage('calc',this)" aria-label="Calculator">
       <span class="nav-icon">
         <img src="icons/icon-exchange.png" class="nav-img" alt="Calculate">
       </span>
+      <span class="nav-label">Exchange</span>
     </button>
-    <button class="nav-btn" onclick="showPage('history',this)">
+    <button class="nav-btn" onclick="showPage('history',this)" aria-label="History">
       <span class="nav-icon">
         <img src="icons/icon-history.png" class="nav-img" alt="History">
       </span>
+      <span class="nav-label">History</span>
     </button>
-    <button class="nav-btn" onclick="showPage('summary',this)">
+    <button class="nav-btn" onclick="showPage('summary',this)" aria-label="Summary">
       <span class="nav-icon">
         <img src="icons/icon-summary.png" class="nav-img" alt="Summary">
       </span>
+      <span class="nav-label">Summary</span>
     </button>
-    <button class="nav-btn" onclick="showPage('settings',this)">
+    <button class="nav-btn" onclick="showPage('settings',this)" aria-label="Settings">
       <span class="nav-icon">
         <img src="icons/icon-settings.png" class="nav-img" alt="Settings">
       </span>
+      <span class="nav-label">Settings</span>
     </button>
   </nav>
 
@@ -372,7 +348,7 @@
 <!-- EXIT / CLOSE WARNING MODAL -->
 <div class="exit-overlay" id="exitOverlay">
   <div class="exit-card">
-    <div class="exit-icon"><img src="icons/icon-warning.png" style="width:48px;height:48px;object-fit:contain;"></div>
+    <div class="exit-icon"><img src="icons/icon-warning.png" style="width:56px;height:56px;object-fit:contain;"></div>
     <div class="exit-title">Leave MushiEx?</div>
     <div class="exit-sub">Your unsaved data may be lost. Are you sure you want to close the app?</div>
     <div class="exit-btn-row" style="margin-top:18px">
@@ -388,7 +364,7 @@
     <div class="modal-handle"></div>
     <div class="modal-title" id="currPickerTitle">Select Currency</div>
     <div class="currency-search-wrap">
-      <span class="currency-search-icon"><img src="icons/icon-search.png" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"></span>
+      <span class="currency-search-icon"><img src="icons/icon-search.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;"></span>
       <input type="text" id="currSearchInput" placeholder="Search currency or country…"
         oninput="filterCurrencies(this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
     </div>
@@ -400,7 +376,7 @@
 <div class="modal-overlay" id="rateModal" onclick="closeRateModal(event)">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title"><img src="icons/icon-updaterate.png" class="btn-icon"> Update Rate</div>
+    <div class="modal-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">⚙️</span> Update Rate</div>
     <div class="input-group">
       <label class="input-label" id="modal-rate-label">Market Rate</label>
       <input type="number" id="modal-rate" placeholder="e.g. 67.50" step="0.01">
@@ -419,7 +395,7 @@
 <div class="modal-overlay" id="billModal" onclick="closeBillModal(event)">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title"><img src="icons/icon-receipt.png" class="btn-icon"> Customer Receipt</div>
+    <div class="modal-title"><img src="icons/icon-receipt.png" style="width:24px;height:24px;object-fit:contain;"> Customer Receipt</div>
     <div id="receiptContent"></div>
     <div style="display:flex;gap:8px;margin-top:8px">
       <button class="btn btn-primary" onclick="downloadReceiptJPG()" style="flex:1">
@@ -439,7 +415,7 @@
 <div class="modal-overlay" id="txnModal" onclick="closeTxnModal(event)">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title"><img src="icons/icon-txndetail.png" class="btn-icon"> Transaction Detail</div>
+    <div class="modal-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">📋</span> Transaction Detail</div>
     <div id="txnDetail"></div>
     <button class="btn btn-danger" id="deleteTxnBtn" style="margin-top:8px">
       <img src="icons/icon-delete.png" class="btn-icon"> Delete This Transaction
@@ -454,6 +430,19 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ════════════════════════════════════════════════════════════
+// SECURITY — HTML Escape utility (prevents XSS)
+// ════════════════════════════════════════════════════════════
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 // ════════════════════════════════════════════════════════════
 // CURRENCIES — All 180+ World Currencies
 // ════════════════════════════════════════════════════════════
@@ -627,12 +616,12 @@ function getCurr(code) {
 // DATA LAYER — localStorage
 // ════════════════════════════════════════════════════════════
 const DB = {
-  getTxns: () => JSON.parse(localStorage.getItem('txns') || '[]'),
-  saveTxns: (arr) => localStorage.setItem('txns', JSON.stringify(arr)),
-  getSettings: () => JSON.parse(localStorage.getItem('settings') || '{"rate":0,"charge":0,"fromCurrency":"MYR","toCurrency":"PKR"}'),
-  saveSettings: (s) => localStorage.setItem('settings', JSON.stringify(s)),
-  getBiz: () => JSON.parse(localStorage.getItem('biz') || '{"name":"MushiEx","phone":"","city":""}'),
-  saveBiz: (b) => localStorage.setItem('biz', JSON.stringify(b)),
+  getTxns: () => { try { return JSON.parse(localStorage.getItem('txns') || '[]'); } catch(e) { return []; } },
+  saveTxns: (arr) => { try { localStorage.setItem('txns', JSON.stringify(arr)); } catch(e) { showToast('⚠️ Storage full or unavailable', true); } },
+  getSettings: () => { try { return JSON.parse(localStorage.getItem('settings') || '{"rate":0,"charge":0,"fromCurrency":"MYR","toCurrency":"PKR"}'); } catch(e) { return {"rate":0,"charge":0,"fromCurrency":"MYR","toCurrency":"PKR"}; } },
+  saveSettings: (s) => { try { localStorage.setItem('settings', JSON.stringify(s)); } catch(e) {} },
+  getBiz: () => { try { return JSON.parse(localStorage.getItem('biz') || '{"name":"MushiEx","phone":"","city":""}'); } catch(e) { return {"name":"MushiEx","phone":"","city":""}; } },
+  saveBiz: (b) => { try { localStorage.setItem('biz', JSON.stringify(b)); } catch(e) {} },
 };
 
 // ════════════════════════════════════════════════════════════
@@ -951,9 +940,9 @@ function calcUpdate() {
   const profit = amount * charge;
 
   document.getElementById('netRateDisplay').textContent = net > 0 ? net.toFixed(2) + ' ' + to.code : '0.00 ' + to.code;
-  document.getElementById('header-rate').textContent    = net > 0 ? `${net.toFixed(2)} ${to.code}/${from.code}` : '-- Rate';
+  document.getElementById('header-rate').textContent    = net > 0 ? `${net.toFixed(2)} ${to.code}/${from.code}` : 'Set Rate ▸';
   document.getElementById('toResult').textContent       = amount > 0 && net > 0 ? fmt(toAmt) : '0.00';
-  document.getElementById('profitResult').textContent   = amount > 0 && charge > 0 ? fmt(profit) + ' ' + to.code : '0.00';
+  document.getElementById('profitResult').textContent   = amount > 0 && charge > 0 ? fmt(profit) + ' ' + from.code : '0.00';
 
   if (rate > 0) {
     DB.saveSettings({ ...s, rate, charge });
@@ -1049,7 +1038,7 @@ function showBill(txn) {
   const no      = String(t.id).slice(-6);
   const d       = fmtDate(t.date);
   const bizName = biz.name || 'MushiEx';
-  const bizPhone = biz.phone ? `<img src="icons/icon-phone.png" style="width:13px;height:13px;object-fit:contain;vertical-align:middle;margin-right:3px;"> ${biz.phone}` : '';
+  const bizPhone = biz.phone ? `<img src="icons/icon-phone.png" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:4px;"> ${biz.phone}` : '';
   const bizCity  = biz.city || '';
 
   document.getElementById('receiptContent').innerHTML = `
@@ -1063,9 +1052,9 @@ function showBill(txn) {
         <div style="margin-top:8px"><span class="receipt-no">Receipt #${no}</span></div>
       </div>
       <div class="receipt-row"><span class="receipt-key">Date</span><span class="receipt-val">${d}</span></div>
-      <div class="receipt-row"><span class="receipt-key">Customer</span><span class="receipt-val">${t.name}</span></div>
-      ${t.phone ? `<div class="receipt-row"><span class="receipt-key">Phone</span><span class="receipt-val">${t.phone}</span></div>` : ''}
-      ${t.receiver ? `<div class="receipt-row"><span class="receipt-key">Receiver</span><span class="receipt-val">${t.receiver}</span></div>` : ''}
+      <div class="receipt-row"><span class="receipt-key">Customer</span><span class="receipt-val">${escapeHtml(t.name)}</span></div>
+      ${t.phone ? `<div class="receipt-row"><span class="receipt-key">Phone</span><span class="receipt-val">${escapeHtml(t.phone)}</span></div>` : ''}
+      ${t.receiver ? `<div class="receipt-row"><span class="receipt-key">Receiver</span><span class="receipt-val">${escapeHtml(t.receiver)}</span></div>` : ''}
       <hr class="receipt-divider">
       <div class="receipt-row"><span class="receipt-key">Amount Paid (${fromCode})</span><span class="receipt-val">${fromCode} ${fmt(fromAmt)}</span></div>
       <div class="receipt-row"><span class="receipt-key">Exchange Rate</span><span class="receipt-val">1 ${fromCode} = ${t.rate.toFixed(4)} ${toCode}</span></div>
@@ -1146,8 +1135,8 @@ function renderHistory() {
     return `
       <div class="txn-item" onclick="showTxnDetail(${t.id})">
         <div class="txn-left">
-          <div class="txn-name">${t.name}</div>
-          <div class="txn-meta">${fmtDate(t.date)}${t.receiver ? ' · ' + t.receiver : ''} · ${fC.flag}→${tC.flag}</div>
+          <div class="txn-name">${escapeHtml(t.name)}</div>
+          <div class="txn-meta">${fmtDate(t.date)}${t.receiver ? ' · ' + escapeHtml(t.receiver) : ''} · ${fC.flag}→${tC.flag}</div>
         </div>
         <div class="txn-right">
           <div class="txn-to">${fmt(ta)} ${tc}</div>
@@ -1176,8 +1165,8 @@ function showTxnDetail(id) {
 
   document.getElementById('txnDetail').innerHTML = `
     <div style="margin-bottom:12px">
-      <div style="font-size:20px;font-weight:800;margin-bottom:4px">${txn.name}</div>
-      <div style="font-size:12px;color:var(--grey)">${fmtDate(txn.date)}${txn.phone ? ' · ' + txn.phone : ''}</div>
+      <div style="font-size:20px;font-weight:800;margin-bottom:4px">${escapeHtml(txn.name)}</div>
+      <div style="font-size:12px;color:var(--grey)">${fmtDate(txn.date)}${txn.phone ? ' · ' + escapeHtml(txn.phone) : ''}</div>
     </div>
     <div class="result-box" style="margin:0 0 10px">
       <div class="result-label">${tC.flag} ${tc} Sent</div>
@@ -1187,7 +1176,7 @@ function showTxnDetail(id) {
     <div class="card" style="margin-bottom:8px">
       <div class="setting-row"><div class="setting-label">${fC.flag} ${fc} Received</div><div class="setting-val" style="color:var(--yellow)">${fc} ${fmt(fa)}</div></div>
       <div class="setting-row"><div class="setting-label">Rate Used</div><div class="setting-val">${txn.rate.toFixed(4)} ${tc}/${fc}</div></div>
-      ${txn.receiver ? `<div class="setting-row"><div class="setting-label">Receiver</div><div class="setting-val" style="font-family:var(--font);font-size:13px">${txn.receiver}</div></div>` : ''}
+      ${txn.receiver ? `<div class="setting-row"><div class="setting-label">Receiver</div><div class="setting-val" style="font-family:var(--font);font-size:13px">${escapeHtml(txn.receiver)}</div></div>` : ''}
       <div class="setting-row"><div class="setting-label">Profit</div><div class="setting-val" style="color:var(--orange)">${fmt(txn.profit)} ${fc}</div></div>
     </div>
     <button class="btn btn-outline" onclick="showBillFromHistory(${id})" style="margin-bottom:0">
@@ -1278,7 +1267,7 @@ function renderSummary() {
   topEl.innerHTML = top.map(c => `
     <div class="txn-item" style="cursor:default">
       <div class="txn-left">
-        <div class="txn-name">${c.name}</div>
+        <div class="txn-name">${escapeHtml(c.name)}</div>
         <div class="txn-meta">${c.count} transaction${c.count>1?'s':''}</div>
       </div>
       <div class="txn-right">
@@ -1410,6 +1399,17 @@ async function downloadReceiptPDF() {
 // START
 // ════════════════════════════════════════════════════════════
 init();
+
+// ════════════════════════════════════════════════════════════
+// SERVICE WORKER REGISTRATION
+// ════════════════════════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(() => console.log('MushiEx SW registered'))
+      .catch(e => console.log('SW registration failed:', e));
+  });
+}
 </script>
 </body>
 </html>
