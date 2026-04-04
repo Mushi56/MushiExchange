@@ -9,13 +9,18 @@
 <meta name="theme-color" content="#0a1628">
 <title>MushiEx – Global</title>
 <link rel="icon" type="image/png" href="logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link rel="stylesheet" href="style.css">
 <style>
   /* Remove top slider bar */
   .nav-btn.active::before { display: none; }
+
+  /* Global Poppins font override */
+  *, *::before, *::after {
+    font-family: 'Poppins', sans-serif !important;
+  }
 
   /* Hide tab labels */
   .nav-label { display: none; }
@@ -158,8 +163,8 @@
 
       <div class="result-box" id="resultBox">
         <div class="result-label" id="resultLabel"><img src="icons/icon-money.png" class="btn-icon"> Amount to Send</div>
-        <div class="result-amount" id="toResult">—</div>
-        <div class="result-unit" id="resultUnit">—</div>
+        <div class="result-amount" id="toResult">0.00</div>
+        <div class="result-unit" id="resultUnit"></div>
       </div>
 
       <div class="profit-box">
@@ -167,7 +172,7 @@
           <div class="profit-label"><img src="icons/icon-money.png" class="btn-icon"> Profit</div>
           <div style="font-size:10px;color:var(--grey);margin-top:2px">Service charge earned</div>
         </div>
-        <div class="profit-val" id="profitResult">—</div>
+        <div class="profit-val" id="profitResult">0.00</div>
       </div>
 
       <button class="btn btn-green" onclick="saveTransaction()" style="margin-bottom:10px">
@@ -945,10 +950,10 @@ function calcUpdate() {
   const toAmt  = amount * net;
   const profit = amount * charge;
 
-  document.getElementById('netRateDisplay').textContent = net > 0 ? net.toFixed(2) + ' ' + to.code : '— ' + to.code;
+  document.getElementById('netRateDisplay').textContent = net > 0 ? net.toFixed(2) + ' ' + to.code : '0.00 ' + to.code;
   document.getElementById('header-rate').textContent    = net > 0 ? `${net.toFixed(2)} ${to.code}/${from.code}` : '-- Rate';
-  document.getElementById('toResult').textContent       = amount > 0 && net > 0 ? fmt(toAmt) : '—';
-  document.getElementById('profitResult').textContent   = amount > 0 && charge > 0 ? fmt(profit) + ' ' + to.code : '—';
+  document.getElementById('toResult').textContent       = amount > 0 && net > 0 ? fmt(toAmt) : '0.00';
+  document.getElementById('profitResult').textContent   = amount > 0 && charge > 0 ? fmt(profit) + ' ' + to.code : '0.00';
 
   if (rate > 0) {
     DB.saveSettings({ ...s, rate, charge });
