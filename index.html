@@ -929,10 +929,10 @@ function calcUpdate() {
   const toAmt  = amount * net;
   const profit = amount * charge;
 
-  document.getElementById('netRateDisplay').textContent = net > 0 ? net.toFixed(4) + ' ' + to.code : '— ' + to.code;
+  document.getElementById('netRateDisplay').textContent = net > 0 ? net.toFixed(2) + ' ' + to.code : '— ' + to.code;
   document.getElementById('header-rate').textContent    = net > 0 ? `${net.toFixed(2)} ${to.code}/${from.code}` : '-- Rate';
   document.getElementById('toResult').textContent       = amount > 0 && net > 0 ? fmt(toAmt) : '—';
-  document.getElementById('profitResult').textContent   = amount > 0 && charge > 0 ? fmt(profit) + ' ' + from.code : '—';
+  document.getElementById('profitResult').textContent   = amount > 0 && charge > 0 ? fmt(profit) + ' ' + to.code : '—';
 
   if (rate > 0) {
     DB.saveSettings({ ...s, rate, charge });
@@ -1167,7 +1167,7 @@ function showTxnDetail(id) {
       <div class="setting-row"><div class="setting-label">${fC.flag} ${fc} Received</div><div class="setting-val" style="color:var(--yellow)">${fc} ${fmt(fa)}</div></div>
       <div class="setting-row"><div class="setting-label">Rate Used</div><div class="setting-val">${txn.rate.toFixed(4)} ${tc}/${fc}</div></div>
       ${txn.receiver ? `<div class="setting-row"><div class="setting-label">Receiver</div><div class="setting-val" style="font-family:var(--font);font-size:13px">${txn.receiver}</div></div>` : ''}
-      <div class="setting-row"><div class="setting-label">Your Profit</div><div class="setting-val" style="color:var(--orange)">${fmt(txn.profit)} ${fc}</div></div>
+      <div class="setting-row"><div class="setting-label">Profit</div><div class="setting-val" style="color:var(--orange)">${fmt(txn.profit)} ${fc}</div></div>
     </div>
     <button class="btn btn-outline" onclick="showBillFromHistory(${id})" style="margin-bottom:0">
       🧾 View Receipt
