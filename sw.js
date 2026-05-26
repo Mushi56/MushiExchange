@@ -1,7 +1,7 @@
 // ════════════════════════════════════════════════════════════
 // MushiEx Service Worker — Offline Support
 // ════════════════════════════════════════════════════════════
-const CACHE_NAME = 'mushiex-v3';
+const CACHE_NAME = 'mushiex-v5';
 
 // All files needed for the app to work offline
 const ASSETS_TO_CACHE = [

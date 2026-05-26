@@ -11,10 +11,11 @@
 <link rel="manifest" href="manifest.json">
 <title>MushiEx – Global</title>
 <link rel="icon" type="image/png" href="logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -165,87 +166,104 @@
 
     <!-- PAGE: HISTORY -->
     <div class="page" id="page-history">
-      <div class="filter-row">
-        <button class="filter-chip active" onclick="filterHistory('today',this)">Today</button>
-        <button class="filter-chip" onclick="filterHistory('week',this)">This Week</button>
-        <button class="filter-chip" onclick="filterHistory('month',this)">This Month</button>
-        <button class="filter-chip" onclick="filterHistory('all',this)">All</button>
+      <div class="filter-card">
+        <div class="filter-card-row">
+          <div style="flex:1">
+            <label class="input-label" style="margin-bottom:6px">Corridor Filter</label>
+            <select id="histCorridorFilter" onchange="renderHistory()" class="filter-select">
+              <option value="all">🌏 All Corridors</option>
+            </select>
+          </div>
+          <div style="flex:1">
+            <label class="input-label" style="margin-bottom:6px">Transaction Size</label>
+            <select id="histSizeFilter" onchange="renderHistory()" class="filter-select">
+              <option value="all">📦 All Sizes</option>
+              <option value="retail">🛒 Retail (&lt; 1k)</option>
+              <option value="commercial">🏢 Commercial (1k - 10k)</option>
+              <option value="wholesale">🏛️ Wholesale (&gt; 10k)</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      <div class="stat-grid">
+      <div class="stat-grid" style="margin-top: 14px;">
         <div class="stat-card" data-emoji="💸">
-          <div class="stat-label">Transactions</div>
-          <div class="stat-val blue" id="hist-count">0</div>
+          <div class="stat-label" id="hist-from-label">Volume Traded</div>
+          <div class="stat-val blue" id="hist-from">0</div>
         </div>
         <div class="stat-card" data-emoji="💰">
-          <div class="stat-label">Total Profit</div>
+          <div class="stat-label">Net Profit</div>
           <div class="stat-val orange" id="hist-profit">0</div>
-        </div>
-        <div class="stat-card" data-emoji="📥">
-          <div class="stat-label" id="hist-from-label">From Total</div>
-          <div class="stat-val yellow" id="hist-from">0</div>
-        </div>
-        <div class="stat-card" data-emoji="📤">
-          <div class="stat-label" id="hist-to-label">To Total</div>
-          <div class="stat-val green" id="hist-to">0</div>
         </div>
       </div>
 
-      <div class="section-title">
+      <div class="section-title" style="margin-top: 12px;">
         <span>Transactions</span>
         <button class="btn btn-danger btn-sm" onclick="confirmClear()" style="display:none" id="clearBtn"><i data-lucide="trash-2" class="btn-icon"></i> Clear All</button>
       </div>
       <div id="historyList"></div>
     </div>
 
-    <!-- PAGE: SUMMARY -->
+    <!-- PAGE: DASHBOARD -->
     <div class="page" id="page-summary">
-      <div class="card">
-        <div class="card-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">📅</span> Monthly Report</div>
-        <div class="filter-row">
-          <button class="filter-chip active" onclick="setSummaryPeriod('month',this)">This Month</button>
-          <button class="filter-chip" onclick="setSummaryPeriod('last',this)">Last Month</button>
-          <button class="filter-chip" onclick="setSummaryPeriod('all',this)">All Time</button>
-        </div>
+      <div class="dashboard-header-row">
+        <h2 class="dash-title">Financial Analytics</h2>
+        <select id="dashPeriodSelect" onchange="renderDashboard()" class="dash-period-select">
+          <option value="7days">Last 7 Days</option>
+          <option value="30days">Last 30 Days</option>
+          <option value="all">All Time</option>
+        </select>
       </div>
 
-      <div class="stat-grid">
-        <div class="stat-card" data-emoji="📋">
-          <div class="stat-label">Total Transactions</div>
-          <div class="stat-val blue" id="sum-count">0</div>
-        </div>
-        <div class="stat-card" data-emoji="💵">
-          <div class="stat-label">Total Profit</div>
+      <!-- Quick Stats KPI Grid -->
+      <div class="stat-grid" style="margin-top: 14px;">
+        <div class="stat-card" data-emoji="📈">
+          <div class="stat-label">Net Profit</div>
           <div class="stat-val orange" id="sum-profit">—</div>
         </div>
-        <div class="stat-card" data-emoji="📥">
-          <div class="stat-label" id="sum-from-label">From Total</div>
-          <div class="stat-val yellow" id="sum-from">—</div>
+        <div class="stat-card" data-emoji="📊">
+          <div class="stat-label" id="sum-volume-label">Total Volume</div>
+          <div class="stat-val blue" id="sum-from">—</div>
         </div>
-        <div class="stat-card" data-emoji="📤">
-          <div class="stat-label" id="sum-to-label">To Total</div>
-          <div class="stat-val green" id="sum-to">—</div>
+        <div class="stat-card" data-emoji="🔄">
+          <div class="stat-label">Transactions</div>
+          <div class="stat-val green" id="sum-count">0</div>
+        </div>
+        <div class="stat-card" data-emoji="💡">
+          <div class="stat-label">Avg Margin %</div>
+          <div class="stat-val yellow" id="sum-avg-margin">—</div>
         </div>
       </div>
 
+      <!-- CHARTS CARD -->
+      <div class="card chart-card">
+        <div class="chart-tab-headers">
+          <button class="chart-tab-btn active" id="chart-tab-volume" onclick="switchChartTab('volume', this)">
+            <i data-lucide="activity"></i> Volume Trend
+          </button>
+          <button class="chart-tab-btn" id="chart-tab-corridors" onclick="switchChartTab('corridors', this)">
+            <i data-lucide="pie-chart"></i> Corridors
+          </button>
+          <button class="chart-tab-btn" id="chart-tab-profit" onclick="switchChartTab('profit', this)">
+            <i data-lucide="trending-up"></i> Profit Split
+          </button>
+        </div>
+        <div class="chart-container">
+          <canvas id="dashboardChart"></canvas>
+        </div>
+      </div>
+
+      <!-- CORRIDOR METRICS CARD -->
       <div class="card">
-        <div class="card-title"><i data-lucide="bar-chart-3" class="card-icon"></i> Averages</div>
-        <div class="setting-row">
-          <div><div class="setting-label">Avg Profit per Customer</div></div>
-          <div class="setting-val" id="sum-avg-profit">—</div>
-        </div>
-        <div class="setting-row">
-          <div><div class="setting-label" id="sum-avg-from-label">Avg Amount per Transaction</div></div>
-          <div class="setting-val" id="sum-avg-from">—</div>
-        </div>
-        <div class="setting-row">
-          <div><div class="setting-label">Best Day Profit</div></div>
-          <div class="setting-val" id="sum-best-day">—</div>
-        </div>
+        <div class="card-title"><i data-lucide="globe" class="card-icon"></i> Corridor Performance</div>
+        <div id="corridorPerformanceList"></div>
       </div>
 
-      <div class="section-title">Top Customers</div>
-      <div id="topCustomers"></div>
+      <!-- TOP CUSTOMERS CARD -->
+      <div class="card">
+        <div class="card-title"><i data-lucide="users" class="card-icon"></i> Top Relationships</div>
+        <div id="topCustomers"></div>
+      </div>
     </div>
 
     <!-- PAGE: SETTINGS -->
@@ -404,11 +422,11 @@
       </span>
       <span class="nav-label">History</span>
     </button>
-    <button class="nav-btn" onclick="showPage('summary',this)" aria-label="Summary">
+    <button class="nav-btn" onclick="showPage('summary',this)" aria-label="Dashboard">
       <span class="nav-icon">
-        <i data-lucide="pie-chart"></i>
+        <i data-lucide="bar-chart-3"></i>
       </span>
-      <span class="nav-label">Summary</span>
+      <span class="nav-label">Dashboard</span>
     </button>
     <button class="nav-btn" onclick="showPage('settings',this)" aria-label="Settings">
       <span class="nav-icon">
@@ -1311,8 +1329,14 @@ function goToPageIndex(idx) {
 
   // trigger page-specific renders
   const id = PAGE_ORDER[idx];
-  if (id === 'history') { renderHistory(); document.getElementById('clearBtn').style.display = DB.getTxns().length ? '' : 'none'; }
-  if (id === 'summary') renderSummary();
+  if (id === 'history') { 
+    populateCorridorFilters(); 
+    renderHistory(); 
+    document.getElementById('clearBtn').style.display = DB.getTxns().length ? '' : 'none'; 
+  }
+  if (id === 'summary') {
+    renderDashboard();
+  }
   if (id === 'settings') { updateSettingsDisplay(); renderProfitCurrOptions(); updateProfitCurrButton(); }
 }
 
@@ -1493,6 +1517,8 @@ function saveTransaction() {
   showToast('✅ Transaction saved!');
   ['custName','custPhone','receiverName','fromAmount'].forEach(id => document.getElementById(id).value = '');
   calcUpdate();
+  populateCorridorFilters();
+  renderDashboard();
   document.getElementById('clearBtn').style.display = '';
 }
 
@@ -1578,54 +1604,73 @@ function closeBillModal(e) {
 // ════════════════════════════════════════════════════════════
 // HISTORY
 // ════════════════════════════════════════════════════════════
-function filterHistory(f, el) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  renderHistory();
-}
-
-function getFilteredTxns(filter) {
-  const all  = DB.getTxns();
-  const now  = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const weekAgo = new Date(today); weekAgo.setDate(today.getDate() - 7);
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  return all.filter(t => {
-    const d = new Date(t.date);
-    if (filter === 'today') return d >= today;
-    if (filter === 'week')  return d >= weekAgo;
-    if (filter === 'month') return d >= monthStart;
-    return true;
+function populateCorridorFilters() {
+  const txns = DB.getTxns();
+  const select = document.getElementById('histCorridorFilter');
+  if (!select) return;
+  
+  const corridors = new Set();
+  txns.forEach(t => {
+    const fromCode = t.fromCurrency || 'MYR';
+    const toCode = t.toCurrency || 'PKR';
+    corridors.add(`${fromCode} ➔ ${toCode}`);
   });
+  
+  const currentVal = select.value;
+  
+  select.innerHTML = '<option value="all">🌏 All Corridors</option>' + 
+    Array.from(corridors).sort().map(c => `
+      <option value="${c}">${c}</option>
+    `).join('');
+    
+  if (Array.from(corridors).includes(currentVal)) {
+    select.value = currentVal;
+  }
 }
 
 function renderHistory() {
-  const s    = DB.getSettings();
-  const txns = getFilteredTxns(currentFilter);
+  const s = DB.getSettings();
+  const allTxns = DB.getTxns();
   const list = document.getElementById('historyList');
+  
+  const corridorFilter = document.getElementById('histCorridorFilter') ? document.getElementById('histCorridorFilter').value : 'all';
+  const sizeFilter = document.getElementById('histSizeFilter') ? document.getElementById('histSizeFilter').value : 'all';
+  
+  const txns = allTxns.filter(t => {
+    const fromCode = t.fromCurrency || 'MYR';
+    const toCode = t.toCurrency || 'PKR';
+    const corridor = `${fromCode} ➔ ${toCode}`;
+    
+    if (corridorFilter !== 'all' && corridor !== corridorFilter) return false;
+    
+    const amount = t.fromAmount != null ? t.fromAmount : (t.rm || 0);
+    if (sizeFilter === 'retail' && amount >= 1000) return false;
+    if (sizeFilter === 'commercial' && (amount < 1000 || amount > 10000)) return false;
+    if (sizeFilter === 'wholesale' && amount <= 10000) return false;
+    
+    return true;
+  });
 
   const totalFrom   = txns.reduce((s,t) => s + (t.fromAmount != null ? t.fromAmount : (t.rm||0)), 0);
-  const totalTo     = txns.reduce((s,t) => s + (t.toAmount   != null ? t.toAmount   : (t.pkr||0)), 0);
   const totalProfit = txns.reduce((s,t) => s + t.profit, 0);
 
   const fromCode = s.fromCurrency || 'MYR';
-  const toCode   = s.toCurrency   || 'PKR';
 
-  document.getElementById('hist-count').textContent  = txns.length;
+  const hasCorridor = corridorFilter !== 'all';
+  const corridorBase = hasCorridor ? corridorFilter.split(' ')[0] : fromCode;
+  document.getElementById('hist-from-label').textContent = hasCorridor ? `${corridorBase} Traded` : 'Volume Traded';
+  document.getElementById('hist-from').textContent   = fmt(totalFrom)   + ' ' + corridorBase;
   document.getElementById('hist-profit').textContent = fmt(totalProfit) + ' ' + fromCode;
-  document.getElementById('hist-from').textContent   = fmt(totalFrom)   + ' ' + fromCode;
-  document.getElementById('hist-to').textContent     = fmt(totalTo)     + ' ' + toCode;
 
   if (!txns.length) {
-    list.innerHTML = `<div class="empty"><div class="empty-icon"><i data-lucide="inbox"></i></div><div class="empty-text">No transactions yet</div></div>`;
+    list.innerHTML = `<div class="empty"><div class="empty-icon"><i data-lucide="inbox"></i></div><div class="empty-text">No matching transactions</div></div>`;
     refreshIcons();
     return;
   }
 
   list.innerHTML = txns.map(t => {
     const fc = t.fromCurrency || fromCode;
-    const tc = t.toCurrency   || toCode;
+    const tc = t.toCurrency || 'PKR';
     const fa = t.fromAmount   != null ? t.fromAmount : (t.rm  || 0);
     const ta = t.toAmount     != null ? t.toAmount   : (t.pkr || 0);
     const fC = getCurr(fc);
@@ -1645,6 +1690,323 @@ function renderHistory() {
     `;
   }).join('');
   refreshIcons();
+}
+
+// ════════════════════════════════════════════════════════════
+// FINANCIAL DASHBOARD & CHARTING ENGINE
+// ════════════════════════════════════════════════════════════
+let currentChartInstance = null;
+let currentChartTab = 'volume';
+
+function switchChartTab(type, btn) {
+  currentChartTab = type;
+  document.querySelectorAll('.chart-tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderDashboardChartsOnly();
+}
+
+function renderDashboard() {
+  const allTxns = DB.getTxns();
+  const period = document.getElementById('dashPeriodSelect') ? document.getElementById('dashPeriodSelect').value : '7days';
+  
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  let startDate = null;
+  if (period === '7days') {
+    startDate = new Date(today); startDate.setDate(today.getDate() - 7);
+  } else if (period === '30days') {
+    startDate = new Date(today); startDate.setDate(today.getDate() - 30);
+  }
+  
+  const txns = startDate ? allTxns.filter(t => new Date(t.date) >= startDate) : allTxns;
+  
+  const s = DB.getSettings();
+  const fromCode = s.fromCurrency || 'MYR';
+  
+  const totalVolume = txns.reduce((sum, t) => sum + (t.fromAmount != null ? t.fromAmount : (t.rm || 0)), 0);
+  const totalProfit = txns.reduce((sum, t) => sum + t.profit, 0);
+  const count = txns.length;
+  const avgMargin = totalVolume ? (totalProfit / totalVolume) * 100 : 0;
+  
+  document.getElementById('sum-profit').textContent = fmt(totalProfit) + ' ' + fromCode;
+  document.getElementById('sum-from').textContent = fmt(totalVolume) + ' ' + fromCode;
+  document.getElementById('sum-count').textContent = count;
+  document.getElementById('sum-avg-margin').textContent = avgMargin.toFixed(2) + '%';
+  document.getElementById('sum-volume-label').textContent = `${fromCode} Volume`;
+  
+  renderTopRelationships(txns, fromCode);
+  renderCorridorPerformance(txns, fromCode);
+  renderDashboardChartsOnly();
+}
+
+function renderTopRelationships(txns, fromCode) {
+  const custMap = {};
+  txns.forEach(t => {
+    if (!custMap[t.name]) custMap[t.name] = { name: t.name, count: 0, totalFrom: 0, totalProfit: 0 };
+    custMap[t.name].count++;
+    custMap[t.name].totalFrom += (t.fromAmount != null ? t.fromAmount : (t.rm||0));
+    custMap[t.name].totalProfit += t.profit;
+  });
+  
+  const top = Object.values(custMap).sort((a,b) => b.totalFrom - a.totalFrom).slice(0, 5);
+  const topEl = document.getElementById('topCustomers');
+  if (!top.length) {
+    topEl.innerHTML = `<div class="empty"><div class="empty-icon"><i data-lucide="users"></i></div><div class="empty-text">No relationships recorded</div></div>`;
+    refreshIcons();
+    return;
+  }
+  
+  topEl.innerHTML = top.map(c => `
+    <div class="txn-item" style="cursor:default">
+      <div class="txn-left">
+        <div class="txn-name">${escapeHtml(c.name)}</div>
+        <div class="txn-meta">${c.count} transaction${c.count>1?'s':''}</div>
+      </div>
+      <div class="txn-right">
+        <div class="txn-from">${fromCode} ${fmt(c.totalFrom)}</div>
+        <div class="txn-profit" style="color:var(--orange)">+${fmt(c.totalProfit)} profit</div>
+      </div>
+    </div>
+  `).join('');
+  refreshIcons();
+}
+
+function renderCorridorPerformance(txns, defaultFrom) {
+  const corridorMap = {};
+  txns.forEach(t => {
+    const f = t.fromCurrency || defaultFrom;
+    const tc = t.toCurrency || 'PKR';
+    const pair = `${f} ➔ ${tc}`;
+    if (!corridorMap[pair]) {
+      corridorMap[pair] = { pair, count: 0, volume: 0, profit: 0, toFlag: getCurr(tc).flag, fromFlag: getCurr(f).flag };
+    }
+    corridorMap[pair].count++;
+    corridorMap[pair].volume += (t.fromAmount != null ? t.fromAmount : (t.rm || 0));
+    corridorMap[pair].profit += t.profit;
+  });
+  
+  const corridors = Object.values(corridorMap).sort((a,b) => b.volume - a.volume);
+  const perfEl = document.getElementById('corridorPerformanceList');
+  if (!corridors.length) {
+    perfEl.innerHTML = `<div class="empty"><div class="empty-icon"><i data-lucide="globe"></i></div><div class="empty-text">No corridor data available</div></div>`;
+    refreshIcons();
+    return;
+  }
+  
+  perfEl.innerHTML = corridors.map(c => `
+    <div class="setting-row" style="padding: 14px 4px;">
+      <div>
+        <div style="font-weight: 700; color: var(--white); display:flex; align-items:center; gap:6px; font-size:14px">
+          <span>${c.fromFlag} ${c.pair.split(' ')[0]}</span>
+          <span style="color: var(--primary); font-size: 11px;">➔</span>
+          <span>${c.toFlag} ${c.pair.split(' ').pop()}</span>
+        </div>
+        <div style="font-size: 11px; color: var(--text-sub); margin-top: 4px;">
+          ${c.count} transactions · Avg profit: ${fmt(c.profit / c.count)}
+        </div>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-family: var(--font-mono); font-weight: 700; color: var(--green); font-size: 13.5px;">
+          ${fmt(c.volume)} vol
+        </div>
+        <div style="font-family: var(--font-mono); font-size: 11.5px; color: var(--orange); margin-top: 3px; font-weight:700">
+          +${fmt(c.profit)} prof
+        </div>
+      </div>
+    </div>
+  `).join('');
+  refreshIcons();
+}
+
+function renderDashboardChartsOnly() {
+  const allTxns = DB.getTxns();
+  const period = document.getElementById('dashPeriodSelect') ? document.getElementById('dashPeriodSelect').value : '7days';
+  
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  let startDate = null;
+  if (period === '7days') {
+    startDate = new Date(today); startDate.setDate(today.getDate() - 7);
+  } else if (period === '30days') {
+    startDate = new Date(today); startDate.setDate(today.getDate() - 30);
+  }
+  
+  const txns = startDate ? allTxns.filter(t => new Date(t.date) >= startDate) : allTxns;
+  
+  const canvas = document.getElementById('dashboardChart');
+  if (!canvas) return;
+  
+  if (currentChartInstance) {
+    currentChartInstance.destroy();
+  }
+  
+  if (!txns.length) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#64748b";
+    ctx.font = "14px 'Inter', sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("No transactions in selected period", canvas.width / 2, canvas.height / 2);
+    return;
+  }
+
+  const labelFont = { family: "'Inter', sans-serif", size: 10, weight: '500' };
+  const titleFont = { family: "'Outfit', sans-serif", size: 12, weight: '700' };
+  
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: currentChartTab === 'corridors',
+        position: 'bottom',
+        labels: {
+          color: '#94a3b8',
+          font: labelFont,
+          boxWidth: 10,
+          boxHeight: 10,
+          padding: 10
+        }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(15, 23, 42, 0.95)',
+        titleColor: '#ffffff',
+        bodyColor: '#f8fafc',
+        borderColor: 'rgba(59, 130, 246, 0.25)',
+        borderWidth: 1.5,
+        cornerRadius: 8,
+        padding: 10,
+        titleFont: titleFont,
+        bodyFont: labelFont,
+        displayColors: false
+      }
+    },
+    scales: currentChartTab === 'corridors' ? {} : {
+      x: {
+        grid: { color: 'rgba(255, 255, 255, 0.04)' },
+        ticks: { color: '#94a3b8', font: labelFont }
+      },
+      y: {
+        grid: { color: 'rgba(255, 255, 255, 0.04)' },
+        ticks: { color: '#94a3b8', font: labelFont }
+      }
+    }
+  };
+
+  const ctx = canvas.getContext('2d');
+  
+  if (currentChartTab === 'volume') {
+    const dailyVolume = {};
+    const sorted = [...txns].sort((a,b) => a.id - b.id);
+    sorted.forEach(t => {
+      const dateKey = fmtDate(t.date);
+      dailyVolume[dateKey] = (dailyVolume[dateKey] || 0) + (t.fromAmount != null ? t.fromAmount : (t.rm || 0));
+    });
+    
+    const labels = Object.keys(dailyVolume);
+    const data = Object.values(dailyVolume);
+    
+    const fillGrad = ctx.createLinearGradient(0, 0, 0, 180);
+    fillGrad.addColorStop(0, 'rgba(59, 130, 246, 0.35)');
+    fillGrad.addColorStop(1, 'rgba(59, 130, 246, 0.01)');
+    
+    currentChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Volume Traded',
+          data: data,
+          borderColor: 'rgb(59, 130, 246)',
+          borderWidth: 2.5,
+          tension: 0.35,
+          fill: true,
+          backgroundColor: fillGrad,
+          pointBackgroundColor: 'rgb(59, 130, 246)',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 1.5,
+          pointRadius: 3.5,
+          pointHoverRadius: 6
+        }]
+      },
+      options: chartOptions
+    });
+    
+  } else if (currentChartTab === 'corridors') {
+    const corridors = {};
+    txns.forEach(t => {
+      const pair = `${t.fromCurrency || 'MYR'}➔${t.toCurrency || 'PKR'}`;
+      corridors[pair] = (corridors[pair] || 0) + 1;
+    });
+    
+    const labels = Object.keys(corridors);
+    const data = Object.values(corridors);
+    
+    const backgroundColors = [
+      'rgba(59, 130, 246, 0.8)',
+      'rgba(16, 185, 129, 0.8)',
+      'rgba(249, 115, 22, 0.8)',
+      'rgba(139, 92, 246, 0.8)',
+      'rgba(59, 200, 246, 0.8)'
+    ];
+    const hoverColors = [
+      'rgba(59, 130, 246, 0.95)',
+      'rgba(16, 185, 129, 0.95)',
+      'rgba(249, 115, 22, 0.95)',
+      'rgba(139, 92, 246, 0.95)',
+      'rgba(59, 200, 246, 0.95)'
+    ];
+    
+    currentChartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: backgroundColors.slice(0, labels.length),
+          hoverBackgroundColor: hoverColors.slice(0, labels.length),
+          borderWidth: 1.5,
+          borderColor: '#1e293b'
+        }]
+      },
+      options: {
+        ...chartOptions,
+        cutout: '72%'
+      }
+    });
+    
+  } else if (currentChartTab === 'profit') {
+    const profits = {};
+    txns.forEach(t => {
+      const pair = `${t.fromCurrency || 'MYR'}➔${t.toCurrency || 'PKR'}`;
+      profits[pair] = (profits[pair] || 0) + t.profit;
+    });
+    
+    const labels = Object.keys(profits);
+    const data = Object.values(profits);
+    
+    const barGrad = ctx.createLinearGradient(0, 0, 0, 180);
+    barGrad.addColorStop(0, 'rgba(249, 115, 22, 0.85)');
+    barGrad.addColorStop(1, 'rgba(249, 115, 22, 0.3)');
+    
+    currentChartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Total Profit',
+          data: data,
+          backgroundColor: barGrad,
+          borderColor: 'rgb(249, 115, 22)',
+          borderWidth: 1.5,
+          borderRadius: 6,
+          barThickness: 18
+        }]
+      },
+      options: chartOptions
+    });
+  }
 }
 
 // ════════════════════════════════════════════════════════════
@@ -1704,81 +2066,17 @@ function deleteTxn(id) {
   const txns = DB.getTxns().filter(t => t.id !== id);
   DB.saveTxns(txns);
   closeTxnModal();
+  populateCorridorFilters();
   renderHistory();
+  renderDashboard();
   showToast('🗑️ Transaction deleted');
 }
 
 // ════════════════════════════════════════════════════════════
 // SUMMARY
 // ════════════════════════════════════════════════════════════
-function setSummaryPeriod(p, el) {
-  currentSummaryPeriod = p;
-  document.querySelectorAll('#page-summary .filter-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  renderSummary();
-}
-
-function renderSummary() {
-  const s   = DB.getSettings();
-  const all = DB.getTxns();
-  const now = new Date();
-  const monthStart     = new Date(now.getFullYear(), now.getMonth(), 1);
-  const lastMonthStart = new Date(now.getFullYear(), now.getMonth()-1, 1);
-  const lastMonthEnd   = new Date(now.getFullYear(), now.getMonth(), 0);
-
-  let txns;
-  if (currentSummaryPeriod === 'month')      txns = all.filter(t => new Date(t.date) >= monthStart);
-  else if (currentSummaryPeriod === 'last')  txns = all.filter(t => { const d = new Date(t.date); return d >= lastMonthStart && d <= lastMonthEnd; });
-  else                                       txns = all;
-
-  const fromCode = s.fromCurrency || 'MYR';
-  const toCode   = s.toCurrency   || 'PKR';
-
-  const totalFrom   = txns.reduce((s,t) => s + (t.fromAmount != null ? t.fromAmount : (t.rm||0)), 0);
-  const totalTo     = txns.reduce((s,t) => s + (t.toAmount   != null ? t.toAmount   : (t.pkr||0)), 0);
-  const totalProfit = txns.reduce((s,t) => s + t.profit, 0);
-  const count       = txns.length;
-
-  document.getElementById('sum-count').textContent   = count;
-  document.getElementById('sum-profit').textContent  = fmt(totalProfit) + ' ' + fromCode;
-  document.getElementById('sum-from').textContent    = fmt(totalFrom)   + ' ' + fromCode;
-  document.getElementById('sum-to').textContent      = fmt(totalTo)     + ' ' + toCode;
-  document.getElementById('sum-avg-profit').textContent = count ? fmt(totalProfit/count) + ' ' + fromCode : '—';
-  document.getElementById('sum-avg-from').textContent   = count ? fmt(totalFrom/count)   + ' ' + fromCode : '—';
-
-  const byDay  = {};
-  txns.forEach(t => { const d = t.date.slice(0,10); byDay[d] = (byDay[d]||0) + t.profit; });
-  const bestDay = Object.values(byDay).length ? Math.max(...Object.values(byDay)) : 0;
-  document.getElementById('sum-best-day').textContent = bestDay ? fmt(bestDay) + ' ' + fromCode : '—';
-
-  const custMap = {};
-  txns.forEach(t => {
-    if (!custMap[t.name]) custMap[t.name] = { name: t.name, count: 0, totalFrom: 0, totalProfit: 0 };
-    custMap[t.name].count++;
-    custMap[t.name].totalFrom   += (t.fromAmount != null ? t.fromAmount : (t.rm||0));
-    custMap[t.name].totalProfit += t.profit;
-  });
-  const top  = Object.values(custMap).sort((a,b) => b.totalFrom - a.totalFrom).slice(0,5);
-  const topEl = document.getElementById('topCustomers');
-  if (!top.length) {
-    topEl.innerHTML = `<div class="empty"><div class="empty-icon"><i data-lucide="users"></i></div><div class="empty-text">No customers yet</div></div>`;
-    refreshIcons();
-    return;
-  }
-  topEl.innerHTML = top.map(c => `
-    <div class="txn-item" style="cursor:default">
-      <div class="txn-left">
-        <div class="txn-name">${escapeHtml(c.name)}</div>
-        <div class="txn-meta">${c.count} transaction${c.count>1?'s':''}</div>
-      </div>
-      <div class="txn-right">
-        <div class="txn-from">${fromCode} ${fmt(c.totalFrom)}</div>
-        <div class="txn-profit">+${fmt(c.totalProfit)} profit</div>
-      </div>
-    </div>
-  `).join('');
-  refreshIcons();
-}
+// Dynamic Corridor Performance Dashboard helpers
+// Replaced by renderDashboard() and renderDashboardChartsOnly()
 
 // ════════════════════════════════════════════════════════════
 // SETTINGS / RATE MODAL
@@ -1849,8 +2147,9 @@ function saveBizInfo() {
 function confirmClear() {
   if (confirm('Delete ALL transactions? This cannot be undone.')) {
     DB.saveTxns([]);
+    populateCorridorFilters();
     renderHistory();
-    renderSummary();
+    renderDashboard();
     showToast('🗑️ All transactions cleared');
     document.getElementById('clearBtn').style.display = 'none';
   }
