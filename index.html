@@ -14,24 +14,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 <link rel="stylesheet" href="style.css">
-<style>
-  /* ── ICON SIZES ── */
-  .btn-icon {
-    width: 22px;
-    height: 22px;
-    object-fit: contain;
-    vertical-align: middle;
-    flex-shrink: 0;
-  }
-  .card-icon {
-    width: 22px;
-    height: 22px;
-    object-fit: contain;
-    vertical-align: middle;
-    flex-shrink: 0;
-  }
-</style>
 </head>
 <body>
 <div id="app">
@@ -61,7 +45,7 @@
     <!-- PAGE: CALCULATOR -->
     <div class="page active" id="page-calc">
       <div class="card">
-        <div class="card-title"><img src="icons/icon-earth.png" class="card-icon"> Currency Pair</div>
+        <div class="card-title"><i data-lucide="globe" class="card-icon"></i> Currency Pair</div>
         <div class="currency-pair-wrap">
           <div>
             <div class="input-label">From (You Receive)</div>
@@ -71,7 +55,7 @@
               <span class="curr-picker-arrow">▾</span>
             </button>
           </div>
-          <button class="swap-btn" onclick="swapCurrencies()" title="Swap currencies"><img src="icons/icon-swap.png" style="width:26px;height:26px;object-fit:contain;vertical-align:middle;"></button>
+          <button class="swap-btn" onclick="swapCurrencies()" title="Swap currencies"><i data-lucide="arrow-left-right"></i></button>
           <div>
             <div class="input-label">To (You Send)</div>
             <button class="curr-picker-btn" id="toCurrBtn" onclick="openCurrPicker('to')">
@@ -84,12 +68,25 @@
       </div>
 
       <div class="card">
-        <div class="card-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">⚙️</span> Rate Settings</div>
+        <div class="card-title"><i data-lucide="sliders" class="card-icon"></i> Rate Settings</div>
+        
+        <div class="rate-source-selector">
+          <button class="source-tab active" id="rate-source-manual" onclick="setRateSource('manual')">
+            <i data-lucide="edit-3"></i> Manual
+          </button>
+          <button class="source-tab" id="rate-source-live" onclick="setRateSource('live')">
+            <i data-lucide="globe"></i> Live Auto
+          </button>
+        </div>
+
         <div class="input-group">
           <label class="input-label" id="rateLabel">Market Rate (1 ? = ? ?)</label>
           <div class="input-wrap">
-            <input type="number" id="marketRate" placeholder="e.g. 67.50" step="0.01"
+            <input type="number" id="marketRate" class="has-suffix" placeholder="e.g. 67.50" step="0.0001"
               oninput="calcUpdate()" value="">
+            <button id="refreshRateBtn" class="input-suffix-btn" onclick="fetchLiveRate(true)" style="display:none" title="Refresh Live Rate">
+              <i data-lucide="refresh-cw"></i>
+            </button>
           </div>
         </div>
         <div class="input-group">
@@ -110,7 +107,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title"><img src="icons/icon-moneybag.png" class="card-icon"> Customer Transaction</div>
+        <div class="card-title"><i data-lucide="user" class="card-icon"></i> Customer Transaction</div>
         <div id="field-name">
           <div class="input-group">
             <label class="input-label">Customer Name</label>
@@ -140,7 +137,7 @@
       </div>
 
       <div class="result-box" id="resultBox">
-        <div class="result-label" id="resultLabel"><img src="icons/icon-money.png" class="btn-icon"> Amount to Send</div>
+        <div class="result-label" id="resultLabel"><i data-lucide="arrow-right-circle" class="btn-icon"></i> Amount to Send</div>
         <div class="result-amount" id="toResult">0.00</div>
         <div class="result-unit" id="resultUnit"></div>
       </div>
@@ -148,7 +145,7 @@
       <div id="field-profit-box">
         <div class="profit-box">
           <div>
-            <div class="profit-label"><img src="icons/icon-money.png" style="width:22px;height:22px;object-fit:contain;"> Profit</div>
+            <div class="profit-label"><i data-lucide="trending-up" class="btn-icon"></i> Profit</div>
             <div style="font-size:10px;color:var(--grey);margin-top:2px">Service charge earned</div>
           </div>
           <div>
@@ -159,10 +156,10 @@
       </div>
 
       <button class="btn btn-green" onclick="saveTransaction()" style="margin-bottom:10px">
-        <img src="icons/icon-save.png" class="btn-icon"> Save & Add to History
+        <i data-lucide="save" class="btn-icon"></i> Save & Add to History
       </button>
       <button class="btn btn-outline" onclick="showBill()">
-        <img src="icons/icon-receipt.png" class="btn-icon"> Preview Bill / Receipt
+        <i data-lucide="receipt" class="btn-icon"></i> Preview Bill / Receipt
       </button>
     </div>
 
@@ -196,7 +193,7 @@
 
       <div class="section-title">
         <span>Transactions</span>
-        <button class="btn btn-danger btn-sm" onclick="confirmClear()" style="display:none" id="clearBtn"><img src="icons/icon-delete.png" class="btn-icon"> Clear All</button>
+        <button class="btn btn-danger btn-sm" onclick="confirmClear()" style="display:none" id="clearBtn"><i data-lucide="trash-2" class="btn-icon"></i> Clear All</button>
       </div>
       <div id="historyList"></div>
     </div>
@@ -232,7 +229,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">📊</span> Averages</div>
+        <div class="card-title"><i data-lucide="bar-chart-3" class="card-icon"></i> Averages</div>
         <div class="setting-row">
           <div><div class="setting-label">Avg Profit per Customer</div></div>
           <div class="setting-val" id="sum-avg-profit">—</div>
@@ -254,7 +251,7 @@
     <!-- PAGE: SETTINGS -->
     <div class="page" id="page-settings">
       <div class="card">
-        <div class="card-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">⚙️</span> Exchange Settings</div>
+        <div class="card-title"><i data-lucide="sliders-horizontal" class="card-icon"></i> Exchange Settings</div>
         <div class="setting-row">
           <div>
             <div class="setting-label">Currency Pair</div>
@@ -284,12 +281,12 @@
           <div class="setting-val" id="set-net">—</div>
         </div>
         <button class="btn btn-primary" style="margin-top:12px" onclick="showRateModal()">
-          <img src="icons/icon-refresh.png" class="btn-icon"> Update Rate
+          <i data-lucide="refresh-cw" class="btn-icon"></i> Update Rate
         </button>
       </div>
 
       <div class="card">
-        <div class="card-title"><img src="icons/icon-businessinfo.png" class="card-icon"> Business Info</div>
+        <div class="card-title"><i data-lucide="briefcase" class="card-icon"></i> Business Info</div>
         <div class="input-group">
           <label class="input-label">Business Name</label>
           <input type="text" id="bizName" placeholder="MushiEx" oninput="saveBizInfo()">
@@ -306,7 +303,7 @@
 
       <!-- CUSTOMIZATION CARD -->
       <div class="card">
-        <div class="card-title"><span style="font-size:18px;vertical-align:middle;margin-right:6px">🎛️</span> Customise Fields</div>
+        <div class="card-title"><i data-lucide="toggle-left" class="card-icon"></i> Customise Fields</div>
         <p style="font-size:12px;color:var(--text-sub);margin-bottom:14px;line-height:1.5">Toggle which fields appear on the calculator screen.</p>
 
         <div class="toggle-row" id="tog-phone-row">
@@ -356,7 +353,7 @@
 
       <!-- PROFIT CURRENCY CARD -->
       <div class="card">
-        <div class="card-title"><span style="font-size:18px;vertical-align:middle;margin-right:6px">💱</span> Profit Display Currency</div>
+        <div class="card-title"><i data-lucide="coins" class="card-icon"></i> Profit Display Currency</div>
         <p style="font-size:12px;color:var(--text-sub);margin-bottom:14px;line-height:1.5">Choose which currency your profit is shown in on the home screen.</p>
         <div class="profit-curr-options" id="profitCurrOptions">
           <!-- rendered by JS -->
@@ -364,7 +361,7 @@
         <div style="margin-top:12px">
           <div class="input-label" style="margin-bottom:6px">Or pick any currency</div>
           <button class="btn btn-outline" style="gap:10px" onclick="openProfitCurrPicker()">
-            <span id="profitCurrFlag" style="font-size:20px">💱</span>
+            <span id="profitCurrFlag" style="font-size:18px">💱</span>
             <span id="profitCurrCode" style="font-weight:700;font-size:15px;color:var(--gold-light)">Same as From</span>
             <span style="margin-left:auto;color:var(--text-sub)">▾</span>
           </button>
@@ -372,7 +369,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">📲</span> Install as App</div>
+        <div class="card-title"><i data-lucide="smartphone" class="card-icon"></i> Install as App</div>
         <p style="font-size:13px;color:var(--grey);line-height:1.6;margin-bottom:12px">
           To install on Android phone:<br>
           1. Open this file in <strong style="color:var(--white)">Chrome</strong><br>
@@ -383,9 +380,9 @@
       </div>
 
       <div class="card">
-        <div class="card-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">💾</span> Data</div>
+        <div class="card-title"><i data-lucide="database" class="card-icon"></i> Data</div>
         <p style="font-size:12px;color:var(--grey);margin-bottom:12px">All data is saved on your phone. No internet needed.</p>
-        <button class="btn btn-danger" onclick="confirmClear()"><img src="icons/icon-delete.png" class="btn-icon"> Clear All Transactions</button>
+        <button class="btn btn-danger" onclick="confirmClear()"><i data-lucide="trash-2" class="btn-icon"></i> Clear All Transactions</button>
       </div>
     </div>
 
@@ -397,25 +394,25 @@
   <nav class="nav">
     <button class="nav-btn active" onclick="showPage('calc',this)" aria-label="Calculator">
       <span class="nav-icon">
-        <img src="icons/icon-exchange.png" class="nav-img" alt="Calculate">
+        <i data-lucide="calculator"></i>
       </span>
       <span class="nav-label">Exchange</span>
     </button>
     <button class="nav-btn" onclick="showPage('history',this)" aria-label="History">
       <span class="nav-icon">
-        <img src="icons/icon-history.png" class="nav-img" alt="History">
+        <i data-lucide="history"></i>
       </span>
       <span class="nav-label">History</span>
     </button>
     <button class="nav-btn" onclick="showPage('summary',this)" aria-label="Summary">
       <span class="nav-icon">
-        <img src="icons/icon-summary.png" class="nav-img" alt="Summary">
+        <i data-lucide="pie-chart"></i>
       </span>
       <span class="nav-label">Summary</span>
     </button>
     <button class="nav-btn" onclick="showPage('settings',this)" aria-label="Settings">
       <span class="nav-icon">
-        <img src="icons/icon-settings.png" class="nav-img" alt="Settings">
+        <i data-lucide="settings"></i>
       </span>
       <span class="nav-label">Settings</span>
     </button>
@@ -426,12 +423,12 @@
 <!-- EXIT / CLOSE WARNING MODAL -->
 <div class="exit-overlay" id="exitOverlay">
   <div class="exit-card">
-    <div class="exit-icon"><img src="icons/icon-warning.png" style="width:56px;height:56px;object-fit:contain;"></div>
+    <div class="exit-icon"><i data-lucide="alert-triangle"></i></div>
     <div class="exit-title">Leave MushiEx?</div>
     <div class="exit-sub">Your unsaved data may be lost. Are you sure you want to close the app?</div>
     <div class="exit-btn-row" style="margin-top:18px">
-      <button class="btn btn-outline" onclick="closeExitModal()" style="flex:1"><img src="icons/icon-stay.png" class="btn-icon"> Stay</button>
-      <button class="btn btn-danger" onclick="confirmExit()" style="flex:1"><img src="icons/icon-closeapp.png" class="btn-icon"> Close App</button>
+      <button class="btn btn-outline" onclick="closeExitModal()" style="flex:1"><i data-lucide="chevron-left" class="btn-icon"></i> Stay</button>
+      <button class="btn btn-danger" onclick="confirmExit()" style="flex:1"><i data-lucide="power" class="btn-icon"></i> Close App</button>
     </div>
   </div>
 </div>
@@ -442,7 +439,7 @@
     <div class="modal-handle"></div>
     <div class="modal-title" id="currPickerTitle">Select Currency</div>
     <div class="currency-search-wrap">
-      <span class="currency-search-icon"><img src="icons/icon-search.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;"></span>
+      <span class="currency-search-icon"><i data-lucide="search"></i></span>
       <input type="text" id="currSearchInput" placeholder="Search currency or country…"
         oninput="filterCurrencies(this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
     </div>
@@ -454,17 +451,32 @@
 <div class="modal-overlay" id="rateModal" onclick="closeRateModal(event)">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">⚙️</span> Update Rate</div>
+    <div class="modal-title"><i data-lucide="sliders-horizontal" class="card-icon"></i> Update Rate</div>
+    
+    <div class="rate-source-selector" style="margin-bottom:15px">
+      <button class="source-tab active" id="modal-rate-source-manual" onclick="setRateSource('manual')">
+        <i data-lucide="edit-3"></i> Manual
+      </button>
+      <button class="source-tab" id="modal-rate-source-live" onclick="setRateSource('live')">
+        <i data-lucide="globe"></i> Live Auto
+      </button>
+    </div>
+
     <div class="input-group">
       <label class="input-label" id="modal-rate-label">Market Rate</label>
-      <input type="number" id="modal-rate" placeholder="e.g. 67.50" step="0.01">
+      <div class="input-wrap">
+        <input type="number" id="modal-rate" class="has-suffix" placeholder="e.g. 67.50" step="0.0001">
+        <button id="modalRefreshRateBtn" class="input-suffix-btn" onclick="fetchLiveRate(true)" style="display:none" title="Refresh Live Rate">
+          <i data-lucide="refresh-cw"></i>
+        </button>
+      </div>
     </div>
     <div class="input-group">
       <label class="input-label" id="modal-charge-label">Your Charge per unit</label>
       <input type="number" id="modal-charge" placeholder="e.g. 0.50" step="0.01">
     </div>
     <button class="btn btn-primary" onclick="applyRate()" style="margin-top:4px">
-      <img src="icons/icon-save.png" class="btn-icon"> Apply Rate
+      <i data-lucide="save" class="btn-icon"></i> Apply Rate
     </button>
   </div>
 </div>
@@ -473,14 +485,14 @@
 <div class="modal-overlay" id="billModal" onclick="closeBillModal(event)">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title"><img src="icons/icon-receipt.png" style="width:24px;height:24px;object-fit:contain;"> Customer Receipt</div>
+    <div class="modal-title"><i data-lucide="receipt"></i> Customer Receipt</div>
     <div id="receiptContent"></div>
     <div style="display:flex;gap:8px;margin-top:8px">
       <button class="btn btn-primary" onclick="downloadReceiptJPG()" style="flex:1">
-        <img src="icons/icon-receipt.png" class="btn-icon"> Save JPG
+        <i data-lucide="image" class="btn-icon"></i> Save JPG
       </button>
       <button class="btn btn-green" onclick="downloadReceiptPDF()" style="flex:1">
-        <img src="icons/icon-receipt.png" class="btn-icon"> Save PDF
+        <i data-lucide="file-text" class="btn-icon"></i> Save PDF
       </button>
     </div>
     <button class="btn btn-outline" onclick="closeBillModal()" style="margin-top:8px">
@@ -493,10 +505,10 @@
 <div class="modal-overlay" id="txnModal" onclick="closeTxnModal(event)">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title"><span style="font-size:16px;vertical-align:middle;margin-right:5px">📋</span> Transaction Detail</div>
+    <div class="modal-title"><i data-lucide="file-text" class="card-icon"></i> Transaction Detail</div>
     <div id="txnDetail"></div>
     <button class="btn btn-danger" id="deleteTxnBtn" style="margin-top:8px">
-      <img src="icons/icon-delete.png" class="btn-icon"> Delete This Transaction
+      <i data-lucide="trash-2" class="btn-icon"></i> Delete This Transaction
     </button>
     <button class="btn btn-outline" onclick="closeTxnModal()" style="margin-top:8px">
       Close
@@ -508,9 +520,9 @@
 <div class="modal-overlay" id="profitCurrModal" onclick="closeProfitCurrPicker(event)">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title">💱 Profit Display Currency</div>
+    <div class="modal-title"><i data-lucide="coins" class="card-icon"></i> Profit Display Currency</div>
     <div class="currency-search-wrap">
-      <span class="currency-search-icon"><img src="icons/icon-search.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;"></span>
+      <span class="currency-search-icon"><i data-lucide="search"></i></span>
       <input type="text" id="profitCurrSearchInput" placeholder="Search currency…"
         oninput="filterProfitCurrList(this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
     </div>
@@ -533,6 +545,15 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+// ════════════════════════════════════════════════════════════
+// ICONS — Dynamic Lucide SVGs compile utility
+// ════════════════════════════════════════════════════════════
+function refreshIcons() {
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
 }
 
 // ════════════════════════════════════════════════════════════
@@ -710,7 +731,7 @@ function getCurr(code) {
 const DB = {
   getTxns: () => { try { return JSON.parse(localStorage.getItem('txns') || '[]'); } catch(e) { return []; } },
   saveTxns: (arr) => { try { localStorage.setItem('txns', JSON.stringify(arr)); } catch(e) { showToast('⚠️ Storage full or unavailable', true); } },
-  getSettings: () => { try { return JSON.parse(localStorage.getItem('settings') || '{"rate":0,"charge":0,"fromCurrency":"MYR","toCurrency":"PKR"}'); } catch(e) { return {"rate":0,"charge":0,"fromCurrency":"MYR","toCurrency":"PKR"}; } },
+  getSettings: () => { try { return JSON.parse(localStorage.getItem('settings') || '{"rate":0,"charge":0,"fromCurrency":"MYR","toCurrency":"PKR","rateSource":"manual"}'); } catch(e) { return {"rate":0,"charge":0,"fromCurrency":"MYR","toCurrency":"PKR","rateSource":"manual"}; } },
   saveSettings: (s) => { try { localStorage.setItem('settings', JSON.stringify(s)); } catch(e) {} },
   getBiz: () => { try { return JSON.parse(localStorage.getItem('biz') || '{"name":"MushiEx","phone":"","city":""}'); } catch(e) { return {"name":"MushiEx","phone":"","city":""}; } },
   saveBiz: (b) => { try { localStorage.setItem('biz', JSON.stringify(b)); } catch(e) {} },
@@ -958,6 +979,176 @@ function populateCurrencySelects() {
   // No-op — replaced by custom picker
 }
 
+// ════════════════════════════════════════════════════════════
+// LIVE CURRENCY EXCHANGE API INTEGRATION
+// ════════════════════════════════════════════════════════════
+let isFetchingRate = false;
+
+async function fetchLiveRate(force = false) {
+  const s = DB.getSettings();
+  if (s.rateSource !== 'live') return;
+
+  const from = s.fromCurrency || 'MYR';
+  const to = s.toCurrency || 'PKR';
+
+  // Check cache first if not forced
+  if (!force) {
+    const cacheKey = `mushiex_rates_${from}`;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        const { timestamp, rates } = JSON.parse(cached);
+        // Freshness limit: 2 hours (2 * 60 * 60 * 1000)
+        if (Date.now() - timestamp < 7200000 && rates[to]) {
+          const rate = rates[to];
+          setLiveRateValue(rate, timestamp);
+          return;
+        }
+      } catch (e) {
+        console.error('Rates cache parse failed:', e);
+      }
+    }
+  }
+
+  // Fetch from network
+  if (isFetchingRate) return;
+  isFetchingRate = true;
+  showRateSpinner(true);
+
+  try {
+    const res = await fetch(`https://open.er-api.com/v6/latest/${from}`);
+    if (!res.ok) throw new Error('API request failed');
+    const data = await res.json();
+
+    if (data.result === 'success' && data.rates && data.rates[to]) {
+      const rate = data.rates[to];
+      // Save cache
+      const cacheData = {
+        timestamp: Date.now(),
+        rates: data.rates
+      };
+      localStorage.setItem(`mushiex_rates_${from}`, JSON.stringify(cacheData));
+
+      setLiveRateValue(rate, Date.now());
+      showToast('⚡ Live rates updated!');
+    } else {
+      throw new Error('Rate for destination currency not found');
+    }
+  } catch (err) {
+    console.error('Fetch live rate failed:', err);
+    // Try fallback to expired cache
+    const cacheKey = `mushiex_rates_${from}`;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        const { timestamp, rates } = JSON.parse(cached);
+        if (rates[to]) {
+          const rate = rates[to];
+          setLiveRateValue(rate, timestamp);
+          showToast('⚠️ Network offline. Using cached rate.', true);
+          return;
+        }
+      } catch(e) {}
+    }
+    // If no cache, switch to manual mode automatically
+    setRateSource('manual');
+    showToast('⚠️ Failed to fetch live rate. Switched to manual.', true);
+  } finally {
+    isFetchingRate = false;
+    showRateSpinner(false);
+  }
+}
+
+function showRateSpinner(show) {
+  const refreshBtns = [document.getElementById('refreshRateBtn'), document.getElementById('modalRefreshRateBtn')];
+  refreshBtns.forEach(btn => {
+    if (!btn) return;
+    const icon = btn.querySelector('.lucide');
+    if (icon) {
+      if (show) {
+        icon.classList.add('spin-animation');
+      } else {
+        icon.classList.remove('spin-animation');
+      }
+    }
+  });
+}
+
+function setLiveRateValue(rate, timestamp) {
+  // Update inputs
+  const marketInput = document.getElementById('marketRate');
+  const modalInput = document.getElementById('modal-rate');
+  
+  marketInput.value = rate.toFixed(4);
+  modalInput.value = rate.toFixed(4);
+  
+  // Save settings
+  const s = DB.getSettings();
+  s.rate = rate;
+  DB.saveSettings(s);
+  
+  // Update freshness timestamp next to label
+  const timeStr = new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const dateStr = new Date(timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' });
+  const freshnessInfo = `(Live fetched at ${timeStr}, ${dateStr})`;
+  
+  const rateLabel = document.getElementById('rateLabel');
+  if (rateLabel) {
+    rateLabel.innerHTML = `Market Rate (1 ${s.fromCurrency} = ? ${s.toCurrency}) <span style="font-size:10.5px;color:var(--gold);margin-left:6px;font-weight:500;text-transform:none;letter-spacing:normal">${freshnessInfo}</span>`;
+  }
+  const modalRateLabel = document.getElementById('modal-rate-label');
+  if (modalRateLabel) {
+    modalRateLabel.innerHTML = `Market Rate (1 ${s.fromCurrency} = ? ${s.toCurrency}) <span style="font-size:10.5px;color:var(--gold);margin-left:6px;font-weight:500;text-transform:none;letter-spacing:normal">${freshnessInfo}</span>`;
+  }
+
+  calcUpdate();
+}
+
+function setRateSourceVisual(source) {
+  const isLive = source === 'live';
+  
+  // Sync tabs active states
+  const manualTab = document.getElementById('rate-source-manual');
+  const liveTab = document.getElementById('rate-source-live');
+  const mManualTab = document.getElementById('modal-rate-source-manual');
+  const mLiveTab = document.getElementById('modal-rate-source-live');
+  
+  if (manualTab) manualTab.classList.toggle('active', !isLive);
+  if (liveTab) liveTab.classList.toggle('active', isLive);
+  if (mManualTab) mManualTab.classList.toggle('active', !isLive);
+  if (mLiveTab) mLiveTab.classList.toggle('active', isLive);
+  
+  // Toggle readonly input
+  const marketInput = document.getElementById('marketRate');
+  const modalInput = document.getElementById('modal-rate');
+  
+  if (marketInput) marketInput.readOnly = isLive;
+  if (modalInput) modalInput.readOnly = isLive;
+  
+  // Toggle buttons
+  const refreshBtn = document.getElementById('refreshRateBtn');
+  const mRefreshBtn = document.getElementById('modalRefreshRateBtn');
+  
+  if (refreshBtn) refreshBtn.style.display = isLive ? '' : 'none';
+  if (mRefreshBtn) mRefreshBtn.style.display = isLive ? '' : 'none';
+}
+
+function setRateSource(source) {
+  const s = DB.getSettings();
+  s.rateSource = source;
+  DB.saveSettings(s);
+  
+  setRateSourceVisual(source);
+  
+  if (source === 'live') {
+    fetchLiveRate();
+  } else {
+    // Switch to manual: clear dynamic live timestamps
+    updateDynamicLabels();
+    calcUpdate();
+  }
+}
+
 function init() {
   populateCurrencySelects(); // no-op, kept for clarity
 
@@ -965,11 +1156,17 @@ function init() {
   // Ensure defaults
   if (!s.fromCurrency) s.fromCurrency = 'MYR';
   if (!s.toCurrency)   s.toCurrency   = 'PKR';
+  if (!s.rateSource)   s.rateSource   = 'manual';
   DB.saveSettings(s);
 
   updateCurrPickerButtons();
+  
+  // Set rate source active tabs and readonly properties
+  setRateSourceVisual(s.rateSource);
 
-  if (s.rate) {
+  if (s.rateSource === 'live') {
+    fetchLiveRate();
+  } else if (s.rate) {
     document.getElementById('marketRate').value = s.rate;
     document.getElementById('chargeRate').value  = s.charge;
   }
@@ -985,6 +1182,7 @@ function init() {
   renderHistory();
   renderSummary();
   updateSettingsDisplay();
+  refreshIcons();
 }
 
 // ════════════════════════════════════════════════════════════
@@ -997,7 +1195,13 @@ function onCurrencyChange() {
   updateDynamicLabels();
   renderProfitCurrOptions();
   updateProfitCurrButton();
-  calcUpdate();
+  
+  if (s.rateSource === 'live') {
+    fetchLiveRate();
+  } else {
+    calcUpdate();
+  }
+  
   renderHistory();
   renderSummary();
   updateSettingsDisplay();
@@ -1023,7 +1227,32 @@ function updateDynamicLabels() {
   document.getElementById('headerSubtitle').textContent = `${from.flag} ${from.code} → ${to.flag} ${to.code}`;
 
   // Rate labels
-  document.getElementById('rateLabel').textContent    = `Market Rate (1 ${from.code} = ? ${to.code})`;
+  const rateLabel = document.getElementById('rateLabel');
+  const modalRateLabel = document.getElementById('modal-rate-label');
+  
+  if (s.rateSource === 'live') {
+    const cacheKey = `mushiex_rates_${from.code}`;
+    const cached = localStorage.getItem(cacheKey);
+    let freshnessInfo = '';
+    if (cached) {
+      try {
+        const { timestamp } = JSON.parse(cached);
+        const timeStr = new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const dateStr = new Date(timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' });
+        freshnessInfo = ` <span style="font-size:10.5px;color:var(--gold);margin-left:6px;font-weight:500;text-transform:none;letter-spacing:normal">(Live fetched at ${timeStr}, ${dateStr})</span>`;
+      } catch(e) {}
+    }
+    rateLabel.innerHTML = `Market Rate (1 ${from.code} = ? ${to.code})${freshnessInfo}`;
+    if (modalRateLabel) {
+      modalRateLabel.innerHTML = `Market Rate (1 ${from.code} = ? ${to.code})${freshnessInfo}`;
+    }
+  } else {
+    rateLabel.textContent = `Market Rate (1 ${from.code} = ? ${to.code})`;
+    if (modalRateLabel) {
+      modalRateLabel.textContent = `Market Rate (1 ${from.code} = ? ${to.code})`;
+    }
+  }
+  
   document.getElementById('chargeLabel').textContent  = `Your Charge per ${from.code} (${to.code})`;
   document.getElementById('netRateSub').textContent   = `per 1 ${from.name}`;
   document.getElementById('toFlag').textContent       = to.flag;
@@ -1034,7 +1263,7 @@ function updateDynamicLabels() {
   document.getElementById('receiverLabel').textContent = `Receiver Name (${to.name.split(' ')[0]})`;
 
   // Result label / unit
-  document.getElementById('resultLabel').innerHTML  = `<img src="icons/icon-money.png" class="btn-icon"> ${to.code} Amount to Send`;
+  document.getElementById('resultLabel').innerHTML  = `<i data-lucide="arrow-right-circle" class="btn-icon"></i> ${to.code} Amount to Send`;
   document.getElementById('resultUnit').textContent   = to.name;
 
   // History stat labels
@@ -1047,8 +1276,9 @@ function updateDynamicLabels() {
   document.getElementById('sum-avg-from-label').textContent = `Avg ${from.code} per Txn`;
 
   // Modal labels
-  document.getElementById('modal-rate-label').textContent   = `Market Rate (1 ${from.code} = ? ${to.code})`;
   document.getElementById('modal-charge-label').textContent = `Your Charge per ${from.code} (${to.code})`;
+
+  refreshIcons();
 }
 
 // ════════════════════════════════════════════════════════════
@@ -1304,7 +1534,7 @@ function showBill(txn) {
   const no      = String(t.id).slice(-6);
   const d       = fmtDate(t.date);
   const bizName = biz.name || 'MushiEx';
-  const bizPhone = biz.phone ? `<img src="icons/icon-phone.png" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:4px;"> ${biz.phone}` : '';
+  const bizPhone = biz.phone ? `<i data-lucide="phone" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> ${biz.phone}` : '';
   const bizCity  = biz.city || '';
 
   document.getElementById('receiptContent').innerHTML = `
@@ -1326,7 +1556,7 @@ function showBill(txn) {
       <div class="receipt-row"><span class="receipt-key">Exchange Rate</span><span class="receipt-val">1 ${fromCode} = ${t.rate.toFixed(4)} ${toCode}</span></div>
       <hr class="receipt-divider">
       <div class="receipt-total">
-        <span class="receipt-total-key"><img src="icons/icon-money.png" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;object-fit:contain;"> ${toCode} to Receive</span>
+        <span class="receipt-total-key"><i data-lucide="circle-check" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> ${toCode} to Receive</span>
         <span class="receipt-total-val">${fmt(toAmt)} ${toCode}</span>
       </div>
       <div class="receipt-footer">
@@ -1336,6 +1566,7 @@ function showBill(txn) {
       </div>
     </div>
   `;
+  refreshIcons();
   document.getElementById('billModal').classList.add('open');
 }
 
@@ -1387,7 +1618,8 @@ function renderHistory() {
   document.getElementById('hist-to').textContent     = fmt(totalTo)     + ' ' + toCode;
 
   if (!txns.length) {
-    list.innerHTML = `<div class="empty"><div class="empty-icon"><img src="icons/icon-empty.png" style="width:48px;height:48px;object-fit:contain;"></div><div class="empty-text">No transactions yet</div></div>`;
+    list.innerHTML = `<div class="empty"><div class="empty-icon"><i data-lucide="inbox"></i></div><div class="empty-text">No transactions yet</div></div>`;
+    refreshIcons();
     return;
   }
 
@@ -1412,6 +1644,7 @@ function renderHistory() {
       </div>
     `;
   }).join('');
+  refreshIcons();
 }
 
 // ════════════════════════════════════════════════════════════
@@ -1446,9 +1679,10 @@ function showTxnDetail(id) {
       <div class="setting-row"><div class="setting-label">Profit</div><div class="setting-val" style="color:var(--orange)">${fmt(txn.profit)} ${fc}</div></div>
     </div>
     <button class="btn btn-outline" onclick="showBillFromHistory(${id})" style="margin-bottom:0">
-      <img src="icons/icon-receipt.png" class="btn-icon"> View Receipt
+      <i data-lucide="receipt" class="btn-icon"></i> View Receipt
     </button>
   `;
+  refreshIcons();
 
   document.getElementById('deleteTxnBtn').onclick = () => deleteTxn(id);
   document.getElementById('txnModal').classList.add('open');
@@ -1527,7 +1761,8 @@ function renderSummary() {
   const top  = Object.values(custMap).sort((a,b) => b.totalFrom - a.totalFrom).slice(0,5);
   const topEl = document.getElementById('topCustomers');
   if (!top.length) {
-    topEl.innerHTML = `<div class="empty"><div class="empty-icon"><img src="icons/icon-customers.png" style="width:48px;height:48px;object-fit:contain;"></div><div class="empty-text">No customers yet</div></div>`;
+    topEl.innerHTML = `<div class="empty"><div class="empty-icon"><i data-lucide="users"></i></div><div class="empty-text">No customers yet</div></div>`;
+    refreshIcons();
     return;
   }
   topEl.innerHTML = top.map(c => `
@@ -1542,6 +1777,7 @@ function renderSummary() {
       </div>
     </div>
   `).join('');
+  refreshIcons();
 }
 
 // ════════════════════════════════════════════════════════════
@@ -1549,6 +1785,7 @@ function renderSummary() {
 // ════════════════════════════════════════════════════════════
 function showRateModal() {
   const s = DB.getSettings();
+  setRateSourceVisual(s.rateSource);
   document.getElementById('modal-rate').value   = s.rate   || '';
   document.getElementById('modal-charge').value = s.charge || '';
   document.getElementById('rateModal').classList.add('open');
@@ -1562,11 +1799,22 @@ function closeRateModal(e) {
 function applyRate() {
   const rate   = parseFloat(document.getElementById('modal-rate').value);
   const charge = parseFloat(document.getElementById('modal-charge').value);
-  if (!rate) { showToast('⚠️ Enter a valid rate', true); return; }
-  document.getElementById('marketRate').value = rate;
-  document.getElementById('chargeRate').value  = charge || 0;
   const s = DB.getSettings();
-  DB.saveSettings({ ...s, rate, charge: charge || 0 });
+  
+  if (s.rateSource === 'manual' && !rate) { 
+    showToast('⚠️ Enter a valid rate', true); 
+    return; 
+  }
+  
+  if (s.rateSource === 'manual') {
+    document.getElementById('marketRate').value = rate;
+    s.rate = rate;
+  }
+  
+  document.getElementById('chargeRate').value  = charge || 0;
+  s.charge = charge || 0;
+  
+  DB.saveSettings(s);
   calcUpdate();
   updateSettingsDisplay();
   document.getElementById('rateModal').classList.remove('open');
